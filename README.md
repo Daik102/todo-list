@@ -1,0 +1,1 @@
+This is the restaurant page project for the Odin Project.
