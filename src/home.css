@@ -343,9 +343,18 @@ dialog svg {
 }
 
 .todo-due-date {
+  margin-left: 3rem;
   font-size: 2rem;
   font-weight: 500;
+}
+
+.todo-due-date span {
+  font-size: 2rem;
   color: var(--gray-theme);
+}
+
+.todo-due-date-value {
+  margin-right: 1.2rem;
 }
 
 .footer {
