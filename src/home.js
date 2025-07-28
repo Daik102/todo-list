@@ -1,13 +1,5 @@
 import { compareAsc, format } from "date-fns";
 
-const date = format(new Date(2025, 6, 27), "EEE MMM dd yyyy");
-//=> Sun Jul 27 2025
-
-const time = format(10, 'h:mm aaa');
-
-console.log(date);
-console.log(time);
-
 const dates = [
   new Date(1995, 6, 2),
   new Date(1987, 1, 11),
@@ -22,8 +14,6 @@ dates.sort(compareAsc);
 // ]
 
 console.log(dates);
-
-
 
 function projectController() {
   const dialogControlProject = document.querySelector('.dialog-control-project');
@@ -304,11 +294,29 @@ function addTodo() {
       alertNoTodoTitle.style.visibility = 'visible';
       return;
     }
-  
+
     const dueDateInput = dueDate.value.replace(/-/g, ',');
-    const dueDateValue = format(new Date(dueDateInput), "EEE MM-dd-yyyy");
+    let dueDateValue;
+    
+    if (!dueDate.value) {
+      dueDateValue = dueDate.value;
+    } else {
+      dueDateValue = format(new Date(dueDateInput), 'EEE MM-dd-yyyy');
+    }
+
+    const timeInput = time.value.split('');
+    const hours = timeInput[0] + timeInput[1];
+    const minutes = timeInput[3] + timeInput[4];
+    let timeValue;
+    
+    if (!time.value) {
+      timeValue = time.value;
+    } else {
+      timeValue = format(new Date(2025, 7, 28, hours, minutes), 'h:mm aaa');
+    }
+    
     const projectTitle = projectTitleBtn.textContent;
-    const newTodo = todoGenerator(projectTitle, title.value, description.value, dueDateValue, time.value, priority.value);
+    const newTodo = todoGenerator(projectTitle, title.value, description.value, dueDateValue, timeValue, priority.value);
     
     projectList = project.getProjectList();
     
@@ -473,11 +481,43 @@ function todoController() {
     });
 
     const currentValue = currentList[editIndex];
+    const date = currentValue.dueDate.slice(4).split('-');
+    const currentDueDate = date[2] + '-' + date[0] + '-' + date[1];
+    const time = currentValue.time.slice(0).split('');
+    let hours;
+    let hour;
+    let minutes;
     
+    if (time[1] !== ':') {
+      hour = time[0] + time[1];
+      minutes = time[3] + time[4];
+    } else {
+      hour = time[0];
+      minutes = time[2] + time[3];
+    }
+    
+    if (time[time.length - 2] === 'p') {
+      if (hour === '12') {
+        hours = hour;
+      } else {
+        hours = (Number(hour) + 12).toString();
+      }
+    } else {
+      if (hour === '12') {
+        hours = '0' + (Number(hour) - 12).toString();
+      } else if (hour === '10' || hour === '11') {
+        hours = hour;
+      } else {
+        hours = '0' + hour;
+      }
+    }
+
+    const currentTime = hours + ':' + minutes;
+
     titleForEdit.value = currentValue.title;
     descriptionForEdit.value = currentValue.description;
-    dueDateForEdit.value = currentValue.dueDate;
-    timeForEdit.value = currentValue.time;
+    dueDateForEdit.value = currentDueDate;
+    timeForEdit.value = currentTime;
     priorityForEdit.value = currentValue.priority;
 
     dialogEditTodo.showModal();
@@ -499,14 +539,32 @@ function todoController() {
       return;
     }
 
-    const currentTodo = currentList[editIndex];
     const dueDateInput = dueDateForEdit.value.replace(/-/g, ',');
-    const dueDateValue = format(new Date(dueDateInput), "EEE MM-dd-yyyy");
+    let dueDateValue;
+    
+    if (!dueDateForEdit.value) {
+      dueDateValue = dueDateForEdit.value;
+    } else {
+      dueDateValue = format(new Date(dueDateInput), "EEE MM-dd-yyyy");
+    }
+
+    const timeInput = timeForEdit.value.split('');
+    const hours = timeInput[0] + timeInput[1];
+    const minutes = timeInput[3] + timeInput[4];
+    let timeValue;
+    
+    if (!timeForEdit.value) {
+      timeValue = timeForEdit.value;
+    } else {
+      timeValue = format(new Date(2025, 7, 28, hours, minutes), 'h:mm aaa');
+    }
+
+    const currentTodo = currentList[editIndex];
 
     currentTodo.title = titleForEdit.value;
     currentTodo.description = descriptionForEdit.value;
     currentTodo.dueDate = dueDateValue;
-    currentTodo.time = timeForEdit.value;
+    currentTodo.time = timeValue;
     currentTodo.priority = priorityForEdit.value;
 
     renderTodo(projectTitle, currentList);
@@ -573,6 +631,7 @@ function renderTodo(projectTitle, renderingList) {
   const addTodoBtn = document.querySelector('.add-todo-btn');
   const arrowBtns = document.querySelectorAll('.arrow-btn');
   const container = document.getElementById('container');
+  const todoDueDateValue = document.querySelector('.todo-due-date-value');
   let todoHTML = '';
   let latestList;
 
@@ -603,7 +662,8 @@ function renderTodo(projectTitle, renderingList) {
     projectTitleBtn.textContent = latestList[0].project;
     if (latestList[0].id !== 0) {
       latestList.forEach((todo) => {
-        todoHTML += `
+        if (!todo.dueDate) {
+          todoHTML += `
           <li class="todo-item" data-id="${todo.id}">
             <div class="todo-title-row">
               <div class="check-mark ${todo.check} ${todo.priority}">
@@ -611,15 +671,35 @@ function renderTodo(projectTitle, renderingList) {
               </div>
               <h3 class="todo-title">${todo.title}</h3>
             </div>
-            <p class="todo-due-date">${todo.dueDate} ${todo.time}</p>
+            <p class="todo-due-date">
+              <span>${todo.dueDate}</span>
+              <span>${todo.time}</span>
+            </p>
           </li>
         `;
+        } else {
+          todoHTML += `
+          <li class="todo-item" data-id="${todo.id}">
+            <div class="todo-title-row">
+              <div class="check-mark ${todo.check} ${todo.priority}">
+                <svg class="check-mark-svg" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><title>check-bold</title><path d="M9,20.42L2.79,14.21L5.62,11.38L9,14.77L18.88,4.88L21.71,7.71L9,20.42Z" /></svg>
+              </div>
+              <h3 class="todo-title">${todo.title}</h3>
+            </div>
+            <p class="todo-due-date">
+              <span class="todo-due-date-value">${todo.dueDate}</span>
+              <span>${todo.time}</span>
+            </p>
+          </li>
+        `;
+        }
       });
     }
   } else if (renderingList[0] && renderingList[0].id !== 0) {
     renderingList.forEach((todo) => {
       if (todo.project === projectTitle) {
-        todoHTML += `
+        if (!todo.dueDate) {
+          todoHTML += `
           <li class="todo-item" data-id="${todo.id}">
             <div class="todo-title-row">
               <div class="check-mark ${todo.check} ${todo.priority}">
@@ -627,13 +707,31 @@ function renderTodo(projectTitle, renderingList) {
               </div>
               <h3 class="todo-title">${todo.title}</h3>
             </div>
-            <p class="todo-due-date">${todo.dueDate} ${todo.time}</p>
+            <p class="todo-due-date">
+              <span>${todo.dueDate}</span>
+              <span>${todo.time}</span>
+            </p>
           </li>
         `;
+        } else {
+          todoHTML += `
+          <li class="todo-item" data-id="${todo.id}">
+            <div class="todo-title-row">
+              <div class="check-mark ${todo.check} ${todo.priority}">
+                <svg class="check-mark-svg" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><title>check-bold</title><path d="M9,20.42L2.79,14.21L5.62,11.38L9,14.77L18.88,4.88L21.71,7.71L9,20.42Z" /></svg>
+              </div>
+              <h3 class="todo-title">${todo.title}</h3>
+            </div>
+            <p class="todo-due-date">
+              <span class="todo-due-date-value">${todo.dueDate}</span>
+              <span>${todo.time}</span>
+            </p>
+          </li>
+        `;
+        }
       }
     });
   }
-
   container.innerHTML = todoHTML;
 }
 
