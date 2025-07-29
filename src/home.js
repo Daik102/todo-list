@@ -1,9 +1,9 @@
 import { compareAsc, format } from "date-fns";
 
 const dates = [
-  new Date(1995, 6, 2),
-  new Date(1987, 1, 11),
-  new Date(1989, 6, 10),
+  [new Date(2025, 6, 29, 12, 30), 0],
+  [new Date(2025, 6, 29, 19, 0), 1],
+  [new Date(2025, 6, 29, 11, 50), 2],
 ];
 
 dates.sort(compareAsc);
@@ -14,6 +14,15 @@ dates.sort(compareAsc);
 // ]
 
 console.log(dates);
+
+const times = [
+  ['7 29 2025', 0],
+  [new Date(2025, 7, 28, 0, 5), 1],
+  [new Date(2025, 7, 28, 17, 12), 2],
+];
+
+times.sort(compareAsc);
+console.log(times);
 
 function projectController() {
   const dialogControlProject = document.querySelector('.dialog-control-project');
@@ -65,7 +74,9 @@ function projectController() {
   createProjectBtn.addEventListener('click', openCreateProject);
 
   const closeCreateProject = (e) => {
-    e.preventDefault();
+    if (e.type === 'click') {
+      e.preventDefault();
+    }
     dialogCreateProject.close();
     projectTitleInput.value = '';
     alertNoProjectTitle.style.visibility = 'hidden';
@@ -73,9 +84,18 @@ function projectController() {
   cancelCreateBtn.addEventListener('click', closeCreateProject);
 
   const createProject = (e) => {
-    e.preventDefault();
+    if (e.type === 'click') {
+      e.preventDefault();
+    }
 
-    const projectTitle = projectTitleInput.value;
+    let projectTitle;
+
+    if (e !== 'click') {
+      projectTitle = e;
+    } else {
+      projectTitle = projectTitleInput.value;
+    }
+    
     const newProject = [];
     const idObject = {id: 0, project: projectTitle};
     newProject.push(idObject);
@@ -159,6 +179,7 @@ function projectController() {
 
     renderTodo('DELETED PROJECT', projectList);
     closeDeleteProject(e);
+    todo.updateCurrentList();
   };
   deleteBtn.addEventListener('click', deleteProject);
 
@@ -200,10 +221,8 @@ function projectController() {
   arrowBtns.forEach((btn) => {
     btn.addEventListener('click', (e) => switchProject(e.target))});
 
-  return {getProjectList};
+  return {createProject, getProjectList};
 }
-
-const project = projectController();
 
 function updateProjectList() {
   let projectList = add.getProjectList();
@@ -248,6 +267,38 @@ function todoGenerator(project, title, description, dueDate, time, priority) {
   };
 }
 
+function formatTime(time) {
+  let hours;
+  let hour;
+  let minutes;
+  
+  if (time[1] !== ':') {
+    hour = time[0] + time[1];
+    minutes = time[3] + time[4];
+  } else {
+    hour = time[0];
+    minutes = time[2] + time[3];
+  }
+  
+  if (time[time.length - 2] === 'p') {
+    if (hour === '12') {
+      hours = hour;
+    } else {
+      hours = (Number(hour) + 12).toString();
+    }
+  } else {
+    if (hour === '12') {
+      hours = '0' + (Number(hour) - 12).toString();
+    } else if (hour === '10' || hour === '11') {
+      hours = hour;
+    } else {
+      hours = '0' + hour;
+    }
+  }
+
+  return {hours, minutes};
+}
+
 function addTodo() {
   const dialogAddTodo = document.querySelector('.dialog-add-todo');
   const title = document.getElementById('title');
@@ -286,17 +337,25 @@ function addTodo() {
   cancelAddBtn.addEventListener('click', closeAddTodo);
 
   const addTodoToProject = (e) => {
-    if (e) {
+    let defaultTodo;
+
+    if (e.type === 'click') {
       e.preventDefault();
+    } else {
+      defaultTodo = e;
     }
 
-    if (title.value === '') {
+    if (title.value === '' && !defaultTodo) {
       alertNoTodoTitle.style.visibility = 'visible';
       return;
     }
 
-    const dueDateInput = dueDate.value.replace(/-/g, ',');
+    const dueDateInput = dueDate.value.replace(/-/g, ',').split(',').map((item) => (Number(item)));
+    const timeInput = time.value.split('');
+    const hours = timeInput[0] + timeInput[1];
+    const minutes = timeInput[3] + timeInput[4];
     let dueDateValue;
+    let timeValue;
     
     if (!dueDate.value) {
       dueDateValue = dueDate.value;
@@ -304,20 +363,19 @@ function addTodo() {
       dueDateValue = format(new Date(dueDateInput), 'EEE MM-dd-yyyy');
     }
 
-    const timeInput = time.value.split('');
-    const hours = timeInput[0] + timeInput[1];
-    const minutes = timeInput[3] + timeInput[4];
-    let timeValue;
-    
     if (!time.value) {
       timeValue = time.value;
     } else {
       timeValue = format(new Date(2025, 7, 28, hours, minutes), 'h:mm aaa');
     }
-    
+    console.log(dueDateValue);
     const projectTitle = projectTitleBtn.textContent;
-    const newTodo = todoGenerator(projectTitle, title.value, description.value, dueDateValue, timeValue, priority.value);
-    
+    let newTodo = todoGenerator(projectTitle, title.value, description.value, dueDateValue, timeValue, priority.value);
+
+    if (defaultTodo) {
+      newTodo = defaultTodo;
+    }
+
     projectList = project.getProjectList();
     
     if (!projectList[1]) {
@@ -325,9 +383,29 @@ function addTodo() {
         projectList[0] = [];
       }
       projectList[0].push(newTodo);
+
+      if (projectList[0][1]) {
+        let date = [];
+        let newOrder = [];
+        
+        projectList[0].forEach((todo, i) => {
+          const time = formatTime(todo.time.slice(0).split(''));
+          const hours = time.hours;
+          const minutes = time.minutes;
+          const dateElement = todo.dueDate.slice(4).replace(/-/g, ',').split(',').map((item) => (Number(item)));
+          dateElement[0] -= 1;
+          date.push([new Date(dateElement[2], dateElement[0], dateElement[1], hours, minutes), i]);
+        });
+        
+        date.sort(compareAsc);
+        date.map((item) => newOrder.push(item[1]));
+        const reorderedList = newOrder.map((index) => projectList[0][index]);
+        projectList[0] = reorderedList;
+      }
+      
       renderTodo(projectTitle, projectList[0]);
     } else {
-      let index;
+      let currentIndex;
 
       projectList.forEach((list, i) => {
         const projectTitleBtn = document.querySelector('.project-title-btn');
@@ -335,15 +413,34 @@ function addTodo() {
 
         if (list[0]) {
           if (projectTitle === list[0].project) {
-            index = i;
+            currentIndex = i;
             if(projectList[i][0].id === 0) {
-              projectList[index] = [];
+              projectList[currentIndex] = [];
             }
-            projectList[index].push(newTodo);
+            projectList[currentIndex].push(newTodo);
+
+            let date = [];
+            let newOrder = [];
+
+            if (projectList[i][1]) {
+              list.forEach((todo, j) => {
+                const time = formatTime(todo.time.slice(0).split(''));
+                const hours = time.hours;
+                const minutes = time.minutes;
+                const dateElement = todo.dueDate.slice(4).replace(/-/g, ',').split(',').map((item) => (Number(item)));
+                dateElement[0] -= 1;
+                date.push([new Date(dateElement[2], dateElement[0], dateElement[1], hours, minutes), j]);
+              });
+              
+              date.sort(compareAsc);
+              date.map((item) => newOrder.push(item[1]));
+              const reorderedList = newOrder.map((index) => projectList[i][index]);
+              projectList[i] = reorderedList;
+            }
           }
         }
       });
-      renderTodo(projectTitle, projectList[index]);
+      renderTodo(projectTitle, projectList[currentIndex]);
     }
     todo.updateCurrentList();
     closeAddTodo();
@@ -354,8 +451,6 @@ function addTodo() {
   
   return {addTodoToProject, getProjectList};
 }
-
-const add = addTodo();
 
 function todoController() {
   const dialogControlTodo = document.querySelector('.dialog-control-todo');
@@ -387,7 +482,7 @@ function todoController() {
   let editIndex;
   let currentDescription;
 
-  const updateCurrentList = () => {
+  const updateCurrentList = (editedList) => {
     const todoItem = document.querySelector('.todo-item');
     if (todoItem) {
       todoItem.addEventListener('click', openControlTodo);
@@ -395,13 +490,17 @@ function todoController() {
 
     projectTitle = projectTitleBtn.textContent;
     projectList = updateProjectList().getProjectList();
-
+    
     projectList.forEach((list) => {
       if (list[0].project === projectTitle) {
-        currentList = list;
+        if (editedList) {
+          currentList = editedList;
+        } else {
+          currentList = list;
+        }
       }
     });
-
+  console.log(currentList);
     if (currentList[1]) {
       todoItems = document.querySelectorAll('.todo-item');
       todoItems.forEach((item) => {
@@ -423,14 +522,17 @@ function todoController() {
     } else if (e.target.classList.contains('todo-title')) {
       id = e.target.parentElement.parentElement.dataset.id;
       checkMark = e.target.previousElementSibling;
-    } else if (e.target.classList.contains('todo-due-date')) {
+    } else if (e.target.classList.contains('todo-due-date-container')) {
       id = e.target.parentElement.dataset.id;
       checkMark = e.target.previousElementSibling.children[0];
+    } else if (e.target.classList.contains('todo-due-date') || e.target.classList.contains('todo-time')) {
+      id = e.target.parentElement.parentElement.dataset.id;
+      checkMark = e.target.parentElement.previousElementSibling.children[0];
     } else {
       id = e.target.parentElement.parentElement.parentElement.parentElement.dataset.id;
       checkMark = e.target.parentElement.parentElement;
     }
-
+    
     currentList.forEach((todo) => {
       if (todo.id === id) {
         if (todo.description === '') {
@@ -481,37 +583,12 @@ function todoController() {
     });
 
     const currentValue = currentList[editIndex];
+    
     const date = currentValue.dueDate.slice(4).split('-');
     const currentDueDate = date[2] + '-' + date[0] + '-' + date[1];
-    const time = currentValue.time.slice(0).split('');
-    let hours;
-    let hour;
-    let minutes;
-    
-    if (time[1] !== ':') {
-      hour = time[0] + time[1];
-      minutes = time[3] + time[4];
-    } else {
-      hour = time[0];
-      minutes = time[2] + time[3];
-    }
-    
-    if (time[time.length - 2] === 'p') {
-      if (hour === '12') {
-        hours = hour;
-      } else {
-        hours = (Number(hour) + 12).toString();
-      }
-    } else {
-      if (hour === '12') {
-        hours = '0' + (Number(hour) - 12).toString();
-      } else if (hour === '10' || hour === '11') {
-        hours = hour;
-      } else {
-        hours = '0' + hour;
-      }
-    }
-
+    const time = formatTime(currentValue.time.slice(0).split(''));
+    const hours = time.hours;
+    const minutes = time.minutes;
     const currentTime = hours + ':' + minutes;
 
     titleForEdit.value = currentValue.title;
@@ -539,19 +616,18 @@ function todoController() {
       return;
     }
 
-    const dueDateInput = dueDateForEdit.value.replace(/-/g, ',');
+    const dueDateInput = dueDateForEdit.value.replace(/-/g, ',').split(',').map((item) => (Number(item)));
+    const timeInput = timeForEdit.value.split('');
+    const hours = timeInput[0] + timeInput[1];
+    const minutes = timeInput[3] + timeInput[4];
     let dueDateValue;
+    let timeValue;
     
     if (!dueDateForEdit.value) {
       dueDateValue = dueDateForEdit.value;
     } else {
-      dueDateValue = format(new Date(dueDateInput), "EEE MM-dd-yyyy");
-    }
-
-    const timeInput = timeForEdit.value.split('');
-    const hours = timeInput[0] + timeInput[1];
-    const minutes = timeInput[3] + timeInput[4];
-    let timeValue;
+      dueDateValue = format(new Date(dueDateInput), 'EEE MM-dd-yyyy');
+    }   
     
     if (!timeForEdit.value) {
       timeValue = timeForEdit.value;
@@ -567,9 +643,28 @@ function todoController() {
     currentTodo.time = timeValue;
     currentTodo.priority = priorityForEdit.value;
 
+    let date = [];
+    let newOrder = [];
+
+    if (currentList[1]) {
+      currentList.forEach((todo, i) => {
+        const time = formatTime(todo.time.slice(0).split(''));
+        const hours = time.hours;
+        const minutes = time.minutes;
+        const dateElement = todo.dueDate.slice(4).replace(/-/g, ',').split(',').map((item) => (Number(item)));
+        dateElement[0] -= 1;
+        date.push([new Date(dateElement[2], dateElement[0], dateElement[1], hours, minutes), i]);
+      });
+      
+      date.sort(compareAsc);
+      date.map((item) => newOrder.push(item[1]));
+      const reorderedList = newOrder.map((index) => currentList[index]);
+      currentList = reorderedList;
+    }
+
     renderTodo(projectTitle, currentList);
     closeEditTodo(e);
-    todo.updateCurrentList();
+    todo.updateCurrentList(currentList);
   }
   editBtn.addEventListener('click', editTodo);
 
@@ -609,29 +704,11 @@ function todoController() {
   return {updateCurrentList};
 };
 
-const todo  = todoController();
-
-const todoOne = todoGenerator('Daily Life', 'Clean the room', 'Clean the living room and the bathroom.', 'Thu Jul. 17', '10:30', 'medium');
-const todoTwo = todoGenerator('Daily Life', 'Buy some foods', 'Go to the abc market and get eggs, tomato and rice.', 'Fri Jul. 18', '17:30', 'high');
-const todoThree = todoGenerator('Daily Life', 'Watch youtube videos', 'Watch some English videos to brush up my listening skill.', 'Sat Jul. 19', '21:00', 'low');
-const todoFour = todoGenerator('Work', 'Attend the meeting', 'Attend the project team meeting and discuss about the progress of the project.', 'Mon Jul. 21', '13:30', 'high');
-const todoFive = todoGenerator('Work', 'Complete the code', 'Finish to debug the Javascript code.', 'Thu Jul. 24', '9:00', 'medium');
-const todoSix = todoGenerator('Daily Life', 'Walk along the river', 'Walk along the river for 30 min as an exercise', 'Thu Jul. 18', '15:00', 'medium');
-
-// modifier.addToProject(todoOne);
-// modifier.addToProject(todoTwo);
-// modifier.addToProject(todoThree);
-// modifier.addToProject(todoFour);
-// modifier.addToProject(todoFive);
-// modifier.addToProject(todoSix);
-
-
 function renderTodo(projectTitle, renderingList) {
   const projectTitleBtn = document.querySelector('.project-title-btn');
   const addTodoBtn = document.querySelector('.add-todo-btn');
   const arrowBtns = document.querySelectorAll('.arrow-btn');
   const container = document.getElementById('container');
-  const todoDueDateValue = document.querySelector('.todo-due-date-value');
   let todoHTML = '';
   let latestList;
 
@@ -664,34 +741,34 @@ function renderTodo(projectTitle, renderingList) {
       latestList.forEach((todo) => {
         if (!todo.dueDate) {
           todoHTML += `
-          <li class="todo-item" data-id="${todo.id}">
-            <div class="todo-title-row">
-              <div class="check-mark ${todo.check} ${todo.priority}">
-                <svg class="check-mark-svg" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><title>check-bold</title><path d="M9,20.42L2.79,14.21L5.62,11.38L9,14.77L18.88,4.88L21.71,7.71L9,20.42Z" /></svg>
+            <li class="todo-item" data-id="${todo.id}">
+              <div class="todo-title-row">
+                <div class="check-mark ${todo.check} ${todo.priority}">
+                  <svg class="check-mark-svg" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><title>check-bold</title><path d="M9,20.42L2.79,14.21L5.62,11.38L9,14.77L18.88,4.88L21.71,7.71L9,20.42Z" /></svg>
+                </div>
+                <h3 class="todo-title">${todo.title}</h3>
               </div>
-              <h3 class="todo-title">${todo.title}</h3>
-            </div>
-            <p class="todo-due-date">
-              <span>${todo.dueDate}</span>
-              <span>${todo.time}</span>
-            </p>
-          </li>
-        `;
+              <p class="todo-due-date-container">
+                <span class="todo-due-date">${todo.dueDate}</span>
+                <span class="todo-time">${todo.time}</span>
+              </p>
+            </li>
+          `;
         } else {
           todoHTML += `
-          <li class="todo-item" data-id="${todo.id}">
-            <div class="todo-title-row">
-              <div class="check-mark ${todo.check} ${todo.priority}">
-                <svg class="check-mark-svg" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><title>check-bold</title><path d="M9,20.42L2.79,14.21L5.62,11.38L9,14.77L18.88,4.88L21.71,7.71L9,20.42Z" /></svg>
+            <li class="todo-item" data-id="${todo.id}">
+              <div class="todo-title-row">
+                <div class="check-mark ${todo.check} ${todo.priority}">
+                  <svg class="check-mark-svg" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><title>check-bold</title><path d="M9,20.42L2.79,14.21L5.62,11.38L9,14.77L18.88,4.88L21.71,7.71L9,20.42Z" /></svg>
+                </div>
+                <h3 class="todo-title">${todo.title}</h3>
               </div>
-              <h3 class="todo-title">${todo.title}</h3>
-            </div>
-            <p class="todo-due-date">
-              <span class="todo-due-date-value">${todo.dueDate}</span>
-              <span>${todo.time}</span>
-            </p>
-          </li>
-        `;
+              <p class="todo-due-date-container">
+                <span class="todo-due-date">${todo.dueDate}</span>
+                <span class="todo-time">${todo.time}</span>
+              </p>
+            </li>
+          `;
         }
       });
     }
@@ -700,34 +777,34 @@ function renderTodo(projectTitle, renderingList) {
       if (todo.project === projectTitle) {
         if (!todo.dueDate) {
           todoHTML += `
-          <li class="todo-item" data-id="${todo.id}">
-            <div class="todo-title-row">
-              <div class="check-mark ${todo.check} ${todo.priority}">
-                <svg class="check-mark-svg" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><title>check-bold</title><path d="M9,20.42L2.79,14.21L5.62,11.38L9,14.77L18.88,4.88L21.71,7.71L9,20.42Z" /></svg>
+            <li class="todo-item" data-id="${todo.id}">
+              <div class="todo-title-row">
+                <div class="check-mark ${todo.check} ${todo.priority}">
+                  <svg class="check-mark-svg" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><title>check-bold</title><path d="M9,20.42L2.79,14.21L5.62,11.38L9,14.77L18.88,4.88L21.71,7.71L9,20.42Z" /></svg>
+                </div>
+                <h3 class="todo-title">${todo.title}</h3>
               </div>
-              <h3 class="todo-title">${todo.title}</h3>
-            </div>
-            <p class="todo-due-date">
-              <span>${todo.dueDate}</span>
-              <span>${todo.time}</span>
-            </p>
-          </li>
-        `;
+              <p class="todo-due-date-container">
+                <span class="todo-due-date">${todo.dueDate}</span>
+                <span class="todo-time">${todo.time}</span>
+              </p>
+            </li>
+          `;
         } else {
           todoHTML += `
-          <li class="todo-item" data-id="${todo.id}">
-            <div class="todo-title-row">
-              <div class="check-mark ${todo.check} ${todo.priority}">
-                <svg class="check-mark-svg" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><title>check-bold</title><path d="M9,20.42L2.79,14.21L5.62,11.38L9,14.77L18.88,4.88L21.71,7.71L9,20.42Z" /></svg>
+            <li class="todo-item" data-id="${todo.id}">
+              <div class="todo-title-row">
+                <div class="check-mark ${todo.check} ${todo.priority}">
+                  <svg class="check-mark-svg" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><title>check-bold</title><path d="M9,20.42L2.79,14.21L5.62,11.38L9,14.77L18.88,4.88L21.71,7.71L9,20.42Z" /></svg>
+                </div>
+                <h3 class="todo-title">${todo.title}</h3>
               </div>
-              <h3 class="todo-title">${todo.title}</h3>
-            </div>
-            <p class="todo-due-date">
-              <span class="todo-due-date-value">${todo.dueDate}</span>
-              <span>${todo.time}</span>
-            </p>
-          </li>
-        `;
+              <p class="todo-due-date-container">
+                <span class="todo-due-date">${todo.dueDate}</span>
+                <span class="todo-time">${todo.time}</span>
+              </p>
+            </li>
+          `;
         }
       }
     });
@@ -735,3 +812,21 @@ function renderTodo(projectTitle, renderingList) {
   container.innerHTML = todoHTML;
 }
 
+const project = projectController();
+const add = addTodo();
+const todo  = todoController();
+
+// some default items
+const todoOne = todoGenerator('daily life', 'clean my rooms', 'clean the living room and the bathroom.', 'Sat 08-02-2025', '10:30 am', 'medium');
+const todoTwo = todoGenerator('daily life', 'buy some foods', 'go to the xyz market and get eggs, tomato and rice.', 'Sun 08-03-2025', '5:30 pm', 'high');
+const todoThree = todoGenerator('daily life', 'watch youtube videos', 'watch some English videos to brush up my listening skill.', 'Sun 08-03-2025', '9:00 pm', 'low');
+const todoFour = todoGenerator('work', 'attend the meeting', 'attend the project team meeting and discuss about the progress of the project.', 'Mon 08-04-2025', '1:30 pm', 'medium');
+const todoFive = todoGenerator('work', 'complete the project', 'finish styling the page and fix the minor bugs.', 'Tue 08-05-2025', '5:00 pm', 'high');
+
+project.createProject('work');
+add.addTodoToProject(todoFour);
+add.addTodoToProject(todoFive);
+project.createProject('daily life');
+add.addTodoToProject(todoOne);
+add.addTodoToProject(todoTwo);
+add.addTodoToProject(todoThree);

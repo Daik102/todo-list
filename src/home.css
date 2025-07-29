@@ -90,7 +90,7 @@ dialog svg {
 .dialog-control-todo,
 .dialog-delete-todo {
   margin: 20rem auto;
-  padding: 4rem 2rem;
+  padding: 4rem 2rem 2.8rem;
 }
 
 .dialog-control-project .btn-container,
@@ -98,7 +98,7 @@ dialog svg {
   display: flex;
   flex-direction: column;
   gap: 2.4rem;
-  padding: 0.8rem;
+  padding: 1rem;
 }
 
 .create-btn,
@@ -132,12 +132,12 @@ dialog svg {
 
 .dialog-create-project form,
 .dialog-edit-project form {
-  padding-bottom: 0.48rem;
+  padding-bottom: 1rem;
 }
 
 .dialog-delete-project form,
 .dialog-delete-todo form {
-  gap: 14rem;
+  gap: 16rem;
 }
 
 .alert-no-project-title,
@@ -149,7 +149,7 @@ dialog svg {
 .dialog-add-todo,
 .dialog-edit-todo {
   margin: 20rem auto;
-  padding: 2rem;
+  padding: 3.68rem 2rem 2rem;
 }
 
 .dialog-add-todo form,
@@ -196,7 +196,7 @@ dialog svg {
   width: 100%;
   display: flex;
   justify-content: center;
-  margin: 4rem 0 0;
+  margin: 4.8rem 0 0;
 }
 
 .todo-description {
@@ -239,6 +239,7 @@ dialog svg {
   display: flex;
   justify-content: center;
   gap: 3.2rem;
+  margin-top: 1.2rem;
 }
 
 .main .btn-container {
@@ -324,7 +325,7 @@ dialog svg {
   background-color: var(--lightgreen-theme);
 }
 
-.middle {
+.medium {
   background-color: var(--yellow-theme);
 }
 
@@ -342,18 +343,18 @@ dialog svg {
   justify-content: space-between;
 }
 
-.todo-due-date {
+.todo-due-date-container {
   margin-left: 3rem;
-  font-size: 2rem;
   font-weight: 500;
 }
 
-.todo-due-date span {
+.todo-due-date,
+.todo-time {
   font-size: 2rem;
   color: var(--gray-theme);
 }
 
-.todo-due-date-value {
+.todo-due-date {
   margin-right: 1.2rem;
 }
 
