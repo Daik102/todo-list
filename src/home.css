@@ -36,10 +36,6 @@ body {
   background-color: var(--background-theme);
 }
 
-li {
-  list-style: none;
-}
-
 button {
   border: none;
 }
@@ -49,17 +45,12 @@ button:hover {
   opacity: 0.8;
 }
 
-a {
-  text-decoration: none;
-}
-
-a:hover {
-  text-decoration: underline;
-}
-
 dialog {
   width: 48rem;
+  margin: 21.2rem auto;
   border: none;
+  
+  background-color: var(--white-theme);
 }
 
 dialog::backdrop {
@@ -69,6 +60,7 @@ dialog::backdrop {
 .dialog-header {
   font-size: 2.8rem;
 }
+
 dialog label,
 dialog input,
 dialog textarea,
@@ -83,22 +75,95 @@ dialog svg {
   fill: var(--orange-theme);
 }
 
-.dialog-control-project,
 .dialog-create-project,
 .dialog-edit-project,
 .dialog-delete-project,
-.dialog-control-todo,
 .dialog-delete-todo {
-  margin: 20rem auto;
-  padding: 4rem 2rem 2.8rem;
+  padding: 4.8rem 2rem 2rem;
+}
+
+.dialog-control-project,
+.dialog-control-todo {
+  padding: 6rem 2rem 3.4rem;
+}
+
+.dialog-create-project form,
+.dialog-edit-project form,
+.dialog-delete-project form,
+.dialog-delete-todo form {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+
+.dialog-create-project form,
+.dialog-edit-project form {
+  gap: 4rem;
+  padding: 0.8rem 0 1.2rem;
+}
+
+.dialog-delete-project form,
+.dialog-delete-todo form {
+  gap: 8.8rem;
+  padding: 5rem 0 1.2rem;
+}
+
+.alert-no-project-title,
+.alert-no-edit-project-title {
+  visibility: hidden;
+  margin: -3.6rem 4rem 0 0;
 }
 
 .dialog-control-project .btn-container,
 .dialog-control-todo .btn-container {
   display: flex;
   flex-direction: column;
-  gap: 2.4rem;
-  padding: 1rem 2rem 2rem;
+  gap: 2.8rem;
+  padding: 1rem 2rem 3rem;
+}
+
+.todo-description {
+  margin: 0 1.6rem 4.8rem;
+  padding: 1.2rem;
+  border: 0.2rem solid var(--main-theme);
+  border-radius: 0.4rem;
+}
+
+.no-todo-description {
+  color: var(--gray-theme);
+}
+
+.dialog-add-todo,
+.dialog-edit-todo {
+  padding: 2.8rem 3.8rem 2.6rem;
+}
+
+.dialog-add-todo form,
+.dialog-edit-todo form {
+  display: flex;
+  flex-direction: column;
+  align-items: start;
+}
+
+.dialog-add-todo textarea,
+.dialog-edit-todo textarea {
+  resize: none;
+  width: 40rem;
+}
+
+.alert-no-todo-title,
+.alert-no-edit-todo-title {
+  visibility: hidden;
+  margin: 0.4rem 0 0 4.8rem;
+}
+
+.dialog-add-todo .btn-container,
+.dialog-edit-todo .btn-container {
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  margin-top: 2.6rem;
 }
 
 .create-btn,
@@ -119,96 +184,32 @@ dialog svg {
   background-color: var(--lightgray-theme);
 }
 
-.dialog-create-project form,
-.dialog-edit-project form,
-.dialog-delete-project form,
-.dialog-delete-todo form {
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
-  gap: 6rem;
-}
-
-.dialog-create-project form,
-.dialog-edit-project form {
-  padding-bottom: 2rem;
-}
-
-.dialog-delete-project form,
-.dialog-delete-todo form {
-  gap: 16rem;
-}
-
-.alert-no-project-title,
-.alert-no-edit-project-title {
-  visibility: hidden;
-  margin: -5.2rem 4rem 0 0;
-}
-
-.dialog-add-todo,
-.dialog-edit-todo {
-  margin: 20rem auto;
-  padding: 4rem 2rem 2.68rem;
-}
-
-.dialog-add-todo form,
-.dialog-edit-todo form {
-  display: flex;
-  flex-direction: column;
-  align-items: start;
-}
-
-.dialog-add-todo textarea,
-.dialog-edit-todo textarea {
-  resize: none;
-  width: 44rem;
-}
-
 #description,
-#due-date,
-#time,
-#description-for-edit,
-#due-date-for-edit,
-#time-for-edit {
+#description-for-edit {
   margin-bottom: 2.4rem;
+  padding: 0.8rem;
 }
 
 .date-time-row {
   display: flex;
-  gap: 2.8rem;
+  gap: 2rem;
+  margin-bottom: 2.4rem;
+}
+
+#due-date,
+#due-date-for-edit {
+  width: 14.8rem;
 }
 
 #priority,
 #priority-for-edit {
-  width: 9.6rem;
-}
-
-.alert-no-todo-title,
-.alert-no-edit-todo-title,
-.alert-no-edit-todo-title {
-  visibility: hidden;
-  margin-left: 4.8rem;
-}
-
-.dialog-add-todo .btn-container,
-.dialog-edit-todo .btn-container {
-  width: 100%;
-  display: flex;
-  justify-content: center;
-  margin: 4.8rem 0 0;
-}
-
-.todo-description {
-  margin: 0 1.2rem 2.4rem;
-  padding: 1.2rem;
-  border: 0.2rem solid var(--main-theme);
-  border-radius: 0.4rem;
+  width: 10rem;
 }
 
 .app-title {
   margin: 2rem 0 4rem;
-  font-size: 3.2rem;
+  font-size: 4rem;
+  font-weight: 200;
   color: var(--white-theme);
 }
 
@@ -251,8 +252,7 @@ dialog svg {
   justify-content: center;
   align-items: center;
   gap: 1rem;
-  margin-bottom: 4rem;
-  color: var(--white-theme);
+  margin-bottom: 3.6rem;
 }
 
 .arrow-btn {
@@ -263,23 +263,24 @@ dialog svg {
 }
 
 .left-btn {
-  padding: 0 0.4rem 0 8rem;
+  padding: 0 0.4rem 0 2rem;
 }
 
 .right-btn {
-  padding: 0 8rem 0 0.4rem;
+  padding: 0 2rem 0 0.4rem;
 }
 
 .project-title-btn {
   padding: 0.4rem;
   font-size: 2.8rem;
-  font-weight: 600;
+  font-weight: 500;
   background-color: var(--main-theme);
   color: var(--white-theme);
 }
 
-#container {
+#todo-container {
   width: 100%;
+  list-style: none;
 }
 
 .todo-item {
@@ -287,12 +288,8 @@ dialog svg {
   height: 10rem;
   padding: 2rem;
   border-bottom: 0.1rem solid var(--lightgray-theme);
+  background-color: var(--white-theme);
   cursor: pointer;
-  background-color: var(--white-theme)
-}
-
-.completed {
-  background-color: var(--lightgray-theme);
 }
 
 .todo-item:hover {
@@ -313,7 +310,12 @@ dialog svg {
 }
 
 .todo-title {
+  flex: 1;
+  text-wrap: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
   font-size: 2.2rem;
+  font-weight: 500;
 }
 
 .check-mark {
@@ -336,8 +338,8 @@ dialog svg {
 }
 
 .checked {
-  background-color: var(--main-theme);
   fill: var(--lightblue-theme);
+  background-color: var(--main-theme);
 }
 
 .todo-date-row {
@@ -356,7 +358,7 @@ dialog svg {
   color: var(--gray-theme);
 }
 
-.todo-due-date {
+.todo-due-date-margin {
   margin-right: 1.2rem;
 }
 
@@ -365,7 +367,7 @@ dialog svg {
   justify-content: center;
   align-items: center;
   width: 48rem;
-  height: 8rem;
+  margin:0 auto;
   padding: 2.8rem 0;
   background-color: var(--main-theme);
 }
@@ -373,4 +375,9 @@ dialog svg {
 .admin-link {
   font-size: 1.4rem;
   color: var(--white-theme);
+  text-decoration: none;
+}
+
+.admin-link:hover {
+  text-decoration: underline;
 }

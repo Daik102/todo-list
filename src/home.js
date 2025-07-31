@@ -23,6 +23,7 @@ function projectController() {
   const alertNoProjectTitle = document.querySelector('.alert-no-project-title');
   const alertNoEditTitle = document.querySelector('.alert-no-edit-project-title');
 
+  let projectTitle;
   let projectList = [];
 
   const openControlProject = () => {
@@ -60,12 +61,9 @@ function projectController() {
   cancelCreateBtn.addEventListener('click', closeCreateProject);
 
   const createProject = (e) => {
-    
     if (e.type === 'click') {
       e.preventDefault();
     }
-
-    let projectTitle;
 
     if (e.type !== 'click') {
       projectTitle = e;
@@ -106,9 +104,8 @@ function projectController() {
     e.preventDefault();
     closeControlProject(e);
 
-    const projectTitle = projectTitleBtn.textContent;
+    projectTitle = projectTitleBtn.textContent;
     editTitleInput.value = projectTitle;
-
     dialogEditProject.showModal();
   };
   editProjectBtn.addEventListener('click', openEditProject);
@@ -118,7 +115,6 @@ function projectController() {
     dialogEditProject.close();
     editTitleInput.value = '';
     alertNoEditTitle.style.visibility = 'hidden';
-    
   };
   cancelEditBtn.addEventListener('click', closeEditProject);
 
@@ -127,14 +123,23 @@ function projectController() {
 
     const oldProjectTitle = projectTitleBtn.textContent;
     const newProjectTitle = editTitleInput.value;
+    projectList = updateProjectList().getProjectList();
 
     if (newProjectTitle === '') {
       alertNoEditTitle.style.visibility = 'visible';
       return;
     }
 
-    projectPropertyEditor(oldProjectTitle, newProjectTitle);
+    projectList.forEach((list) => {
+      if (list[0].project === oldProjectTitle) {
+        list.forEach((todo) => {
+          todo.project = newProjectTitle;
+        });
+      }
+    });
+
     renderTodo(newProjectTitle);
+    todo.updateCurrentList()
     closeEditProject(e);
   };
   editBtn.addEventListener('click', editProject);
@@ -155,60 +160,72 @@ function projectController() {
   const deleteProject = (e) => {
     e.preventDefault();
 
-    const projectTitle = projectTitleBtn.textContent;
-    const projectList = projectEraser(projectTitle);
+    projectTitle = projectTitleBtn.textContent;
+    projectList = updateProjectList().getProjectList();
+    
+    projectList.forEach((list, i) => {
+      if (list[0].project === projectTitle) {
+        projectList.splice(i, 1);
+      }
+    });
 
     renderTodo('DELETED PROJECT', projectList);
-    closeDeleteProject(e);
     todo.updateCurrentList();
+    closeDeleteProject(e);
   };
   deleteBtn.addEventListener('click', deleteProject);
 
   const switchProject = (arrowBtn, initialLoading) => {
+    projectTitle = projectTitleBtn.textContent;
     projectList = updateProjectList().getProjectList();
-   
-    let projectTitle = projectTitleBtn.textContent;
+    let sendingProject;
+
     if (initialLoading) {
-      renderTodo(projectList[0][0].project, projectList[0]);
-      return;
+      projectTitle = projectList[0][0].project;
+      sendingProject = projectList[0];
     }
-    if (arrowBtn.classList.contains('left-btn')) {
-      let previousProject;
 
-      projectList.forEach((list, i) => {
-        list.forEach((todo) => {
-          if (todo.project === projectTitle) {
-            previousProject = projectList[i - 1];
-          }
-        });
-      });
-      if (!previousProject) {
-        previousProject = projectList[projectList.length -1];
-      }
-  
-      projectTitle = previousProject[0].project;
-      renderTodo(projectTitle, previousProject);
-    } else {
-      let nextProject;
+    if (arrowBtn) {
+      if (arrowBtn.classList.contains('left-btn')) {
+        let previousProject;
 
-      projectList.forEach((list, i) => {
-        list.forEach((todo) => {
-          if (todo.project === projectTitle) {
-            nextProject = projectList[i + 1];
-          }
+        projectList.forEach((list, i) => {
+          list.forEach((todo) => {
+            if (todo.project === projectTitle) {
+              previousProject = projectList[i - 1];
+            }
+          });
         });
-      });
-      if (!nextProject) {
-        nextProject = projectList[0];
+        if (!previousProject) {
+          previousProject = projectList[projectList.length -1];
+        }
+    
+        projectTitle = previousProject[0].project;
+        sendingProject = previousProject;
+      } else if (arrowBtn.classList.contains('right-btn')) {
+        let nextProject;
+
+        projectList.forEach((list, i) => {
+          list.forEach((todo) => {
+            if (todo.project === projectTitle) {
+              nextProject = projectList[i + 1];
+            }
+          });
+        });
+        if (!nextProject) {
+          nextProject = projectList[0];
+        }
+      
+        projectTitle = nextProject[0].project;
+        sendingProject = nextProject;
       }
-     
-      projectTitle = nextProject[0].project;
-      renderTodo(projectTitle, nextProject);
     }
+    renderTodo(projectTitle, sendingProject);
     todo.updateCurrentList();
   };
   arrowBtns.forEach((btn) => {
-    btn.addEventListener('click', (e) => switchProject(e.target))});
+    btn.addEventListener('click', (e) => switchProject(e.target));
+  });
 
   return {createProject, getProjectList, switchProject};
 }
@@ -245,31 +262,6 @@ function updateProjectList(list, listIndex) {
   localStorage.setItem('projectList', JSON.stringify(projectList));
   console.log(projectList);
   return {getProjectList};
-}
-
-function projectPropertyEditor(oldProjectTitle, newProjectTitle) {
-  const projectList = updateProjectList().getProjectList();
-
-  projectList.forEach((list) => {
-    if (list[0].project === oldProjectTitle) {
-      list.forEach((todo) => {
-        todo.project = newProjectTitle;
-      });
-    }
-  });
-}
-
-function projectEraser(projectTitle) {
-  const projectList = updateProjectList().getProjectList();
-  
-  projectList.forEach((list, i) => {
-    
-    if (list[0].project === projectTitle) {
-      projectList.splice(i, 1);
-    }
-  });
-  
-  return projectList;
 }
 
 function todoGenerator(project, check, title, description, dueDate, time, priority) {
@@ -310,6 +302,25 @@ function formatTime(time) {
   return {hours, minutes};
 }
 
+function reorderList(list) {
+  let date = [];
+  let newOrder = [];
+
+  list.forEach((todo, i) => {
+    const time = formatTime(todo.time.slice(0).split(''));
+    const hours = time.hours;
+    const minutes = time.minutes;
+    const dateElement = todo.dueDate.slice(4).replace(/-/g, ',').split(',').map((item) => (Number(item)));
+    dateElement[0] -= 1;
+    date.push([new Date(dateElement[2], dateElement[0], dateElement[1], hours, minutes), i]);
+  });
+  
+  date.sort(compareAsc);
+  date.map((item) => newOrder.push(item[1]));
+  const reorderedList = newOrder.map((index) => list[index]);
+  return reorderedList;
+}
+
 function addTodo() {
   const dialogAddTodo = document.querySelector('.dialog-add-todo');
   const title = document.getElementById('title');
@@ -323,6 +334,7 @@ function addTodo() {
   const projectTitleBtn = document.querySelector('.project-title-btn');
   const alertNoTodoTitle = document.querySelector('.alert-no-todo-title');
 
+  let projectTitle;
   let projectList = [];
 
   const openAddTodo = (e) => {
@@ -338,17 +350,18 @@ function addTodo() {
     if (alertNoTodoTitle.style.visibility = 'visible') {
       alertNoTodoTitle.style.visibility = 'hidden';
     }
-    dialogAddTodo.close();
     title.value = '';
     description.value = '';
     dueDate.value = '';
     time.value = '';
     priority.value = '';
+    dialogAddTodo.close();
   };
   cancelAddBtn.addEventListener('click', closeAddTodo);
 
   const addTodoToProject = (e) => {
     let defaultTodo;
+    let check;
 
     if (e.type === 'click') {
       e.preventDefault();
@@ -361,8 +374,6 @@ function addTodo() {
       return;
     }
 
-    let check;
-
     if (defaultTodo) {
       check = defaultTodo.check;
     } else {
@@ -373,94 +384,43 @@ function addTodo() {
     const timeInput = time.value.split('');
     const hours = timeInput[0] + timeInput[1];
     const minutes = timeInput[3] + timeInput[4];
-    let dueDateValue;
-    let timeValue;
+    let dueDateValue = '';
+    let timeValue = '';
     
-    if (!dueDate.value) {
-      dueDateValue = dueDate.value;
-    } else {
+    if (dueDate.value) {
       dueDateValue = format(new Date(dueDateInput), 'EEE MM-dd-yyyy');
     }
-
-    if (!time.value) {
-      timeValue = time.value;
-    } else {
+    if (time.value) {
       timeValue = format(new Date(2025, 7, 28, hours, minutes), 'h:mm aaa');
     }
     
-    const projectTitle = projectTitleBtn.textContent;
+    projectTitle = projectTitleBtn.textContent;
+    projectList = updateProjectList().getProjectList();
+
     let newTodo = todoGenerator(projectTitle, check, title.value, description.value, dueDateValue, timeValue, priority.value);
 
     if (defaultTodo) {
       newTodo = defaultTodo;
     }
 
-    projectList = project.getProjectList();
-   
-    if (!projectList[1]) {
-      if (projectList[0][0].id === 0) {
-        projectList[0] = [];
-      }
-      projectList[0].push(newTodo);
+    let currentIndex;
 
-      if (projectList[0][1]) {
-        let date = [];
-        let newOrder = [];
-        
-        projectList[0].forEach((todo, i) => {
-          const time = formatTime(todo.time.slice(0).split(''));
-          const hours = time.hours;
-          const minutes = time.minutes;
-          const dateElement = todo.dueDate.slice(4).replace(/-/g, ',').split(',').map((item) => (Number(item)));
-          dateElement[0] -= 1;
-          date.push([new Date(dateElement[2], dateElement[0], dateElement[1], hours, minutes), i]);
-        });
-        
-        date.sort(compareAsc);
-        date.map((item) => newOrder.push(item[1]));
-        const reorderedList = newOrder.map((index) => projectList[0][index]);
-        projectList[0] = reorderedList;
-      }
-      
-      renderTodo(projectTitle, projectList[0]);
-    } else {
-      let currentIndex;
-
-      projectList.forEach((list, i) => {
-        const projectTitleBtn = document.querySelector('.project-title-btn');
-        const projectTitle = projectTitleBtn.textContent;
-
-        if (list[0]) {
-          if (projectTitle === list[0].project) {
-            currentIndex = i;
-            if(projectList[i][0].id === 0) {
-              projectList[currentIndex] = [];
-            }
-            projectList[currentIndex].push(newTodo);
-
-            let date = [];
-            let newOrder = [];
-
-            if (projectList[i][1]) {
-              list.forEach((todo, j) => {
-                const time = formatTime(todo.time.slice(0).split(''));
-                const hours = time.hours;
-                const minutes = time.minutes;
-                const dateElement = todo.dueDate.slice(4).replace(/-/g, ',').split(',').map((item) => (Number(item)));
-                dateElement[0] -= 1;
-                date.push([new Date(dateElement[2], dateElement[0], dateElement[1], hours, minutes), j]);
-              });
-              
-              date.sort(compareAsc);
-              date.map((item) => newOrder.push(item[1]));
-              const reorderedList = newOrder.map((index) => projectList[i][index]);
-              projectList[i] = reorderedList;
-            }
-          }
+    projectList.forEach((list, i) => {
+      if (projectTitle === list[0].project) {
+        currentIndex = i;
+        if(projectList[i][0].id === 0) {
+          projectList[currentIndex] = [];
         }
-      });
-      renderTodo(projectTitle, projectList[currentIndex]);
-    }
+        projectList[currentIndex].push(newTodo);
+
+        if (projectList[i][1]) {
+          const reorderedList = reorderList(list);
+          projectList[i] = reorderedList;
+        }
+      }
+    });
+
+    renderTodo(projectTitle, projectList[currentIndex]);
     todo.updateCurrentList();
     closeAddTodo();
   }
@@ -493,16 +453,16 @@ function todoController() {
   const todoDescription = document.querySelector('.todo-description');
 
   let projectTitle;
-  let projectList;
-  let todoItems;
-  let id;
-  let checkMark;
-  let currentList;
+  let projectList = [];
+  let currentList = [];
   let listIndex;
   let editIndex;
+  let id;
+  let checkMark;
   let currentDescription;
+  let currentTodo;
 
-  const updateCurrentList = (editedList) => {
+  const updateCurrentList = () => {
     const todoItem = document.querySelector('.todo-item');
     if (todoItem) {
       todoItem.addEventListener('click', openControlTodo);
@@ -513,18 +473,14 @@ function todoController() {
     
     projectList.forEach((list, i) => {
       if (list[0].project === projectTitle) {
-        if (editedList) {
-          currentList = editedList;
-        } else {
-          currentList = list;
-          listIndex = i;
-        }
+        currentList = list;
+        listIndex = i;
       }
     });
   
     if (currentList) {
       if (currentList[1]) {
-        todoItems = document.querySelectorAll('.todo-item');
+        const todoItems = document.querySelectorAll('.todo-item');
         todoItems.forEach((item) => {
           item.addEventListener('click', openControlTodo);
         });
@@ -560,8 +516,12 @@ function todoController() {
       if (todo.id === id) {
         if (todo.description === '') {
           currentDescription = 'No description';
+          todoDescription.classList.add('no-todo-description');
         } else {
           currentDescription = todo.description;
+          if (todoDescription.classList.contains('no-todo-description')) {
+            todoDescription.classList.remove('no-todo-description');
+          }
         }
       }
     });
@@ -606,20 +566,18 @@ function todoController() {
       }
     });
 
-    const currentValue = currentList[editIndex];
+    currentTodo = currentList[editIndex];
     
-    const date = currentValue.dueDate.slice(4).split('-');
+    const date = currentTodo.dueDate.slice(4).split('-');
     const currentDueDate = date[2] + '-' + date[0] + '-' + date[1];
-    const time = formatTime(currentValue.time.slice(0).split(''));
-    const hours = time.hours;
-    const minutes = time.minutes;
-    const currentTime = hours + ':' + minutes;
+    const time = formatTime(currentTodo.time.slice(0).split(''));
+    const currentTime = time.hours + ':' + time.minutes;
 
-    titleForEdit.value = currentValue.title;
-    descriptionForEdit.value = currentValue.description;
+    titleForEdit.value = currentTodo.title;
+    descriptionForEdit.value = currentTodo.description;
     dueDateForEdit.value = currentDueDate;
     timeForEdit.value = currentTime;
-    priorityForEdit.value = currentValue.priority;
+    priorityForEdit.value = currentTodo.priority;
 
     dialogEditTodo.showModal();
   };
@@ -627,8 +585,8 @@ function todoController() {
 
   const closeEditTodo  = (e) => {
     e.preventDefault();
-    dialogEditTodo.close();
     alertNoEditTitle.style.visibility = 'hidden';
+    dialogEditTodo.close();
   };
   cancelEditBtn.addEventListener('click', closeEditTodo);
   
@@ -644,22 +602,17 @@ function todoController() {
     const timeInput = timeForEdit.value.split('');
     const hours = timeInput[0] + timeInput[1];
     const minutes = timeInput[3] + timeInput[4];
-    let dueDateValue;
-    let timeValue;
+    let dueDateValue = '';
+    let timeValue = '';
     
-    if (!dueDateForEdit.value) {
-      dueDateValue = dueDateForEdit.value;
-    } else {
+    if (dueDateForEdit.value) {
       dueDateValue = format(new Date(dueDateInput), 'EEE MM-dd-yyyy');
     }   
-    
-    if (!timeForEdit.value) {
-      timeValue = timeForEdit.value;
-    } else {
+    if (timeForEdit.value) {
       timeValue = format(new Date(2025, 7, 28, hours, minutes), 'h:mm aaa');
     }
 
-    const currentTodo = currentList[editIndex];
+    currentTodo = currentList[editIndex];
 
     currentTodo.title = titleForEdit.value;
     currentTodo.description = descriptionForEdit.value;
@@ -667,29 +620,15 @@ function todoController() {
     currentTodo.time = timeValue;
     currentTodo.priority = priorityForEdit.value;
 
-    let date = [];
-    let newOrder = [];
-
     if (currentList[1]) {
-      currentList.forEach((todo, i) => {
-        const time = formatTime(todo.time.slice(0).split(''));
-        const hours = time.hours;
-        const minutes = time.minutes;
-        const dateElement = todo.dueDate.slice(4).replace(/-/g, ',').split(',').map((item) => (Number(item)));
-        dateElement[0] -= 1;
-        date.push([new Date(dateElement[2], dateElement[0], dateElement[1], hours, minutes), i]);
-      });
-      
-      date.sort(compareAsc);
-      date.map((item) => newOrder.push(item[1]));
-      const reorderedList = newOrder.map((index) => currentList[index]);
+      const reorderedList = reorderList(currentList);
       currentList = reorderedList;
     }
-
+    
     renderTodo(projectTitle, currentList);
-    closeEditTodo(e);
     updateProjectList(currentList, listIndex);
     updateCurrentList();
+    closeEditTodo(e);
   }
   editBtn.addEventListener('click', editTodo);
 
@@ -721,27 +660,27 @@ function todoController() {
     }
     
     renderTodo(projectTitle, currentList);
-    closeDeleteTodo(e);
     todo.updateCurrentList();
+    closeDeleteTodo(e);
   };
   deleteBtn.addEventListener('click', deleteTodo);
 
   return {updateCurrentList};
 };
 
-function renderTodo(projectTitle, renderingList, showAddBtn, showArrowBtns) {
+function renderTodo(projectTitle, list, showAddBtn, showArrowBtns) {
   const projectTitleBtn = document.querySelector('.project-title-btn');
   const addTodoBtn = document.querySelector('.add-todo-btn');
   const arrowBtns = document.querySelectorAll('.arrow-btn');
-  const container = document.getElementById('container');
+  const todoContainer = document.getElementById('todo-container');
   let todoHTML = '';
-  let latestList;
+  let renderingList;
 
   if (projectTitle && projectTitle !== 'DELETED PROJECT') {
     projectTitleBtn.textContent = projectTitle;
   }
   
-  if (!renderingList && projectTitle !== 'DELETED PROJECT') {
+  if (!list && projectTitle !== 'DELETED PROJECT') {
     return;
   }
 
@@ -753,120 +692,77 @@ function renderTodo(projectTitle, renderingList, showAddBtn, showArrowBtns) {
   }
 
   if (projectTitle === 'DELETED PROJECT') {
-    if (!renderingList[0]) {
+    if (!list[0]) {
       projectTitleBtn.textContent = 'Start Project';
       addTodoBtn.style.visibility = 'hidden';
 
-      return container.innerHTML = todoHTML;
+      return todoContainer.innerHTML = todoHTML;
     } else {
-      if (renderingList.length === 1) {
-        arrowBtns.forEach((btn) => {
-          btn.style.visibility = 'hidden';
-        });
+      if (list.length === 1) {
+        arrowBtns.forEach((btn) => btn.style.visibility = 'hidden');
       }
-      latestList = renderingList[renderingList.length -1];
+      renderingList = list[list.length -1];
+      projectTitle = renderingList[0].project;
+      projectTitleBtn.textContent = projectTitle;
     }
+  } else {
+    renderingList = list;
   }
-  if (latestList) {
-    projectTitleBtn.textContent = latestList[0].project;
-    if (latestList[0].id !== 0) {
-      latestList.forEach((todo) => {
-        if (!todo.dueDate) {
-          todoHTML += `
-            <li class="todo-item" data-id="${todo.id}">
-              <div class="todo-title-row">
-                <div class="check-mark ${todo.check} ${todo.priority}">
-                  <svg class="check-mark-svg" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><title>check-bold</title><path d="M9,20.42L2.79,14.21L5.62,11.38L9,14.77L18.88,4.88L21.71,7.71L9,20.42Z" /></svg>
-                </div>
-                <h3 class="todo-title">${todo.title}</h3>
-              </div>
-              <p class="todo-due-date-container">
-                <span class="todo-due-date">${todo.dueDate}</span>
-                <span class="todo-time">${todo.time}</span>
-              </p>
-            </li>
-          `;
-        } else {
-          todoHTML += `
-            <li class="todo-item" data-id="${todo.id}">
-              <div class="todo-title-row">
-                <div class="check-mark ${todo.check} ${todo.priority}">
-                  <svg class="check-mark-svg" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><title>check-bold</title><path d="M9,20.42L2.79,14.21L5.62,11.38L9,14.77L18.88,4.88L21.71,7.71L9,20.42Z" /></svg>
-                </div>
-                <h3 class="todo-title">${todo.title}</h3>
-              </div>
-              <p class="todo-due-date-container">
-                <span class="todo-due-date">${todo.dueDate}</span>
-                <span class="todo-time">${todo.time}</span>
-              </p>
-            </li>
-          `;
-        }
-      });
-    }
-  } else if (renderingList[0] && renderingList[0].id !== 0) {
+  
+  if (renderingList[0].id !== 0) {
+    let margin = '';
+
     renderingList.forEach((todo) => {
       if (todo.project === projectTitle) {
-        if (!todo.dueDate) {
-          todoHTML += `
-            <li class="todo-item" data-id="${todo.id}">
-              <div class="todo-title-row">
-                <div class="check-mark ${todo.check} ${todo.priority}">
-                  <svg class="check-mark-svg" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><title>check-bold</title><path d="M9,20.42L2.79,14.21L5.62,11.38L9,14.77L18.88,4.88L21.71,7.71L9,20.42Z" /></svg>
-                </div>
-                <h3 class="todo-title">${todo.title}</h3>
-              </div>
-              <p class="todo-due-date-container">
-                <span class="todo-due-date">${todo.dueDate}</span>
-                <span class="todo-time">${todo.time}</span>
-              </p>
-            </li>
-          `;
-        } else {
-          todoHTML += `
-            <li class="todo-item" data-id="${todo.id}">
-              <div class="todo-title-row">
-                <div class="check-mark ${todo.check} ${todo.priority}">
-                  <svg class="check-mark-svg" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><title>check-bold</title><path d="M9,20.42L2.79,14.21L5.62,11.38L9,14.77L18.88,4.88L21.71,7.71L9,20.42Z" /></svg>
-                </div>
-                <h3 class="todo-title">${todo.title}</h3>
-              </div>
-              <p class="todo-due-date-container">
-                <span class="todo-due-date">${todo.dueDate}</span>
-                <span class="todo-time">${todo.time}</span>
-              </p>
-            </li>
-          `;
+        if (todo.dueDate) {
+          margin = 'todo-due-date-margin';
         }
+
+        todoHTML += `
+          <li class="todo-item" data-id="${todo.id}">
+            <div class="todo-title-row">
+              <div class="check-mark ${todo.check} ${todo.priority}">
+                <svg class="check-mark-svg" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9,20.42L2.79,14.21L5.62,11.38L9,14.77L18.88,4.88L21.71,7.71L9,20.42Z" /></svg>
+              </div>
+              <h3 class="todo-title">${todo.title}</h3>
+            </div>
+            <p class="todo-due-date-container">
+              <span class="todo-due-date ${margin}">${todo.dueDate}</span>
+              <span class="todo-time">${todo.time}</span>
+            </p>
+          </li>
+        `;
+
+        margin = '';
       }
     });
   }
-  container.innerHTML = todoHTML;
+  todoContainer.innerHTML = todoHTML;  
 }
 
 const project = projectController();
 const add = addTodo();
-const todo  = todoController();
+const todo = todoController();
 
 // some default items
-const todoOne = todoGenerator('daily life', 'unchecked', 'clean my rooms', 'clean the living room and the bathroom.', 'Sat 08-02-2025', '10:30 am', 'medium');
-const todoTwo = todoGenerator('daily life', 'unchecked', 'buy some foods', 'go to the xyz store and get eggs, vegetables and rice.', 'Sun 08-03-2025', '5:30 pm', 'high');
-const todoThree = todoGenerator('daily life', 'unchecked', 'watch youtube videos', 'watch some English videos to brush up my listening skill.', 'Sun 08-03-2025', '9:00 pm', 'low');
-const todoFour = todoGenerator('work', 'unchecked', 'attend the meeting', 'attend the project team meeting and discuss about the progress of the project.', 'Mon 08-04-2025', '1:30 pm', 'medium');
-const todoFive = todoGenerator('work', 'unchecked', 'complete the project', 'finish styling the page and fix the minor bugs.', 'Tue 08-05-2025', '5:00 pm', 'high');
+const todoOne = todoGenerator('Daily life', 'unchecked', 'Clean the rooms', 'Clean the living room and the bathroom.', 'Sat 08-02-2025', '10:30 am', 'medium');
+const todoTwo = todoGenerator('Daily life', 'unchecked', 'Buy foods', 'Go to XYZ store and get eggs, rice and vegetables.', 'Sun 08-03-2025', '5:30 pm', 'high');
+const todoThree = todoGenerator('Daily life', 'unchecked', 'Watch videos', 'Watch some English videos on YouTube to brush up my listening skill.', 'Sun 08-03-2025', '9:00 pm', 'low');
+const todoFour = todoGenerator('My work', 'unchecked', 'Attend the meeting', 'Attend the team meeting and discuss about the progress of the project.', 'Mon 08-04-2025', '1:30 pm', 'medium');
+const todoFive = todoGenerator('My work', 'unchecked', 'Complete the project', 'Finish styling the page and fix some minor bugs.', 'Tue 08-05-2025', '5:00 pm', 'high');
 
 // localStorage.removeItem('projectList');
+
 const storedList = JSON.parse(localStorage.getItem('projectList'));
 
 if (storedList) {
-  console.log(storedList[0]);
   updateProjectList(storedList, 'all');
 } else {
-  project.createProject('daily life');
+  project.createProject('Daily life');
   add.addTodoToProject(todoOne);
   add.addTodoToProject(todoTwo);
   add.addTodoToProject(todoThree);
-  project.createProject('work');
+  project.createProject('My work');
   add.addTodoToProject(todoFour);
   add.addTodoToProject(todoFive);
 }
