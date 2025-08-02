@@ -115,6 +115,13 @@ dialog svg {
   margin: -3.6rem 4rem 0 0;
 }
 
+.alert-duplicated-title,
+.alert-duplicated-edit-title {
+  visibility: hidden;
+  margin: -7.2rem 4rem 0 0;
+  translate: 1.5rem 0.7rem;
+}
+
 .dialog-control-project .btn-container,
 .dialog-control-todo .btn-container {
   display: flex;
