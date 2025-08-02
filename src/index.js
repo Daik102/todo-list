@@ -3,7 +3,7 @@ import { projectController, updateForProjectController } from './project-control
 import { todoGenerator, addTodo, todoController, updateForTodoController } from './todo-controller.js';
 import { renderTodo } from './render.js';
 
-export function updateProjectList(title, list, fromStorage) {
+export function updateProjectList(title, list) {
   let projectTitle;
   let projectList = [];
   let currentList = [];
@@ -34,20 +34,6 @@ export function updateProjectList(title, list, fromStorage) {
 
   if (listIndex !== undefined) {
     currentList = projectList[listIndex];
-  }
-  
-  if (fromStorage) {
-    projectList.forEach((list) => {
-      project.createProject(list[0].project);
-
-      list.forEach((todo) => {
-        if (todo.id === 0) {
-          return;
-        }
-        const todoItem = todoGenerator(todo.project, todo.check, todo.title, todo.description, todo.dueDate, todo.time, todo.priority);
-        add.addTodoToProject(todoItem);
-      });
-    });
   }
   
   const getProjectList = () => projectList;
@@ -82,7 +68,17 @@ const todoFive = todoGenerator('My work', 'unchecked', 'Complete the project', '
 const storedList = JSON.parse(localStorage.getItem('projectList'));
 
 if (storedList) {
-  updateProjectList(storedList[0][0].project, storedList, 'fromStorage');
+  storedList.forEach((list) => {
+    project.createProject(list[0].project);
+
+    list.forEach((todo) => {
+      if (todo.id === 0) {
+        return;
+      }
+      const todoItem = todoGenerator(todo.project, todo.check, todo.title, todo.description, todo.dueDate, todo.time, todo.priority);
+      add.addTodoToProject(todoItem);
+    });
+  });
 } else {
   project.createProject('Daily life');
   add.addTodoToProject(todoOne);
@@ -91,5 +87,6 @@ if (storedList) {
   project.createProject('My work');
   add.addTodoToProject(todoFour);
   add.addTodoToProject(todoFive);
-  project.switchProject('', 'initialLoading');
 }
+
+project.switchProject('', 'initialLoading');
