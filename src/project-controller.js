@@ -1,4 +1,4 @@
-import { updateProjectList } from "./index.js";
+import { updateProjectList } from "./index";
 
 export function projectController() {
   const dialogControlProject = document.querySelector('.dialog-control-project');
@@ -107,7 +107,7 @@ export function projectController() {
 
     projectList.push(newProject);
 
-    if (projectList[1]) {
+    if (projectList[1] !== undefined) {
       arrowBtns.forEach((btn) => {
         btn.style.visibility = 'visible';
       });
@@ -211,7 +211,7 @@ export function projectController() {
       }
     });
 
-    if (!projectList[0]) {
+    if (projectList[0] === undefined) {
       projectTitle  = 'Start Project';
       addTodoBtn.style.visibility = 'hidden';
     } else if (projectList.length === 1) {
@@ -231,9 +231,13 @@ export function projectController() {
     projectList = update.getProjectList();
     let listIndex;
 
-    if (initialLoading) {
-      projectTitle = projectList[0][0].project;
-      listIndex = 0;
+    if (initialLoading === 'initialLoading') {
+      if (projectList[0] === undefined) {
+        projectTitle === 'Start Project';
+      } else {
+        projectTitle = projectList[0][0].project;
+        listIndex = 0;
+      }
     }
 
     if (arrowBtn) {
@@ -259,8 +263,10 @@ export function projectController() {
         });
       }
     }
+    if (projectList[0] !== undefined) {
+      projectTitle = projectList[listIndex][0].project;
+    }
     
-    projectTitle = projectList[listIndex][0].project;
     updateProjectList(projectTitle, projectList);
   };
   arrowBtns.forEach((btn) => {

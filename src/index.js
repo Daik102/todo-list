@@ -1,7 +1,13 @@
 import './home.css';
-import { projectController, updateForProjectController } from './project-controller.js';
-import { todoGenerator, addTodo, todoController, updateForTodoController } from './todo-controller.js';
-import { renderTodo } from './render.js';
+import { projectController,
+         updateForProjectController,
+} from './project-controller';
+import { todoGenerator,
+         addTodo,
+         todoController,
+         updateForTodoController,
+} from './todo-controller';
+import { renderTodo } from './render';
 
 export function updateProjectList(title, list) {
   let projectTitle;
@@ -64,10 +70,9 @@ const todoThree = todoGenerator('Daily life', 'unchecked', 'Watch videos', 'Watc
 const todoFour = todoGenerator('My work', 'unchecked', 'Attend the meeting', 'Attend the team meeting and discuss about the progress of the project.', 'Mon 08-04-2025', '1:30 pm', 'medium');
 const todoFive = todoGenerator('My work', 'unchecked', 'Complete the project', 'Finish styling the page and fix some minor bugs.', 'Tue 08-05-2025', '5:00 pm', 'high');
 
-// localStorage.removeItem('projectList');
 const storedList = JSON.parse(localStorage.getItem('projectList'));
 
-if (storedList) {
+if (storedList[0] !== undefined) {
   storedList.forEach((list) => {
     project.createProject(list[0].project);
 

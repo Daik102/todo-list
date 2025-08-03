@@ -1,5 +1,7 @@
-import { updateProjectList } from './index.js';
-import { format, compareAsc } from "date-fns";
+import { updateProjectList } from './index';
+import { format,
+         compareAsc
+} from "date-fns";
 
 export function todoGenerator(project, check, title, description, dueDate, time, priority) {
   return {
@@ -359,10 +361,10 @@ export function todoController() {
     let dueDateValue = '';
     let timeValue = '';
     
-    if (dueDateForEdit.value) {
+    if (dueDateForEdit.value !== '') {
       dueDateValue = format(new Date(dueDateInput), 'EEE MM-dd-yyyy');
     }   
-    if (timeForEdit.value) {
+    if (timeForEdit.value !== '') {
       timeValue = format(new Date(2025, 7, 28, hours, minutes), 'h:mm aaa');
     }
 
@@ -374,7 +376,7 @@ export function todoController() {
     currentTodo.time = timeValue;
     currentTodo.priority = priorityForEdit.value;
 
-    if (projectList[listIndex][1]) {
+    if (projectList[listIndex][1] !== undefined) {
       const reorderedList = reorderList(projectList[listIndex]);
       projectList[listIndex] = reorderedList;
     }
@@ -415,7 +417,7 @@ export function todoController() {
       }
     });
 
-    if (!projectList[listIndex][0]) {
+    if (projectList[listIndex][0] === undefined) {
       const idObject = {id: 0, project: projectTitle};
       projectList[listIndex].push(idObject);
     }
