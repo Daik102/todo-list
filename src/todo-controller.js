@@ -1,11 +1,24 @@
 import { updateProjectList } from './index';
-import { format,
-         compareAsc
-} from "date-fns";
+import { format, compareAsc } from 'date-fns';
 
-export function todoGenerator(project, check, title, description, dueDate, time, priority) {
+export function todoGenerator(
+  project,
+  check,
+  title,
+  description,
+  dueDate,
+  time,
+  priority,
+) {
   return {
-    id: crypto.randomUUID(), project, check, title, description, dueDate, time, priority
+    id: crypto.randomUUID(),
+    project,
+    check,
+    title,
+    description,
+    dueDate,
+    time,
+    priority,
   };
 }
 
@@ -13,7 +26,7 @@ function formatTime(time) {
   let hours;
   let hour;
   let minutes;
-  
+
   if (time[1] !== ':') {
     hour = time[0] + time[1];
     minutes = time[3] + time[4];
@@ -21,7 +34,7 @@ function formatTime(time) {
     hour = time[0];
     minutes = time[2] + time[3];
   }
-  
+
   if (time[time.length - 2] === 'p') {
     if (hour === '12') {
       hours = hour;
@@ -38,7 +51,10 @@ function formatTime(time) {
     }
   }
 
-  return {hours, minutes};
+  return {
+    hours,
+    minutes,
+  };
 }
 
 function reorderList(list) {
@@ -47,13 +63,21 @@ function reorderList(list) {
 
   list.forEach((todo, i) => {
     const time = formatTime(todo.time.slice(0).split(''));
+
     const hours = time.hours;
     const minutes = time.minutes;
-    const dateElement = todo.dueDate.slice(4).replace(/-/g, ',').split(',').map((item) => (Number(item)));
+    const dateElement = todo.dueDate
+      .slice(4)
+      .replace(/-/g, ',')
+      .split(',')
+      .map((item) => Number(item));
     dateElement[0] -= 1;
-    date.push([new Date(dateElement[2], dateElement[0], dateElement[1], hours, minutes), i]);
+    date.push([
+      new Date(dateElement[2], dateElement[0], dateElement[1], hours, minutes),
+      i,
+    ]);
   });
-  
+
   date.sort(compareAsc);
   date.map((item) => newOrder.push(item[1]));
   const reorderedList = newOrder.map((index) => list[index]);
@@ -87,9 +111,11 @@ export function addTodo() {
     if (e) {
       e.preventDefault();
     }
-    if (alertNoTodoTitle.style.visibility = 'visible') {
+
+    if (alertNoTodoTitle.style.visibility === 'visible') {
       alertNoTodoTitle.style.visibility = 'hidden';
     }
+
     title.value = '';
     description.value = '';
     dueDate.value = '';
@@ -97,6 +123,7 @@ export function addTodo() {
     priority.value = '';
     dialogAddTodo.close();
   };
+
   cancelAddBtn.addEventListener('click', closeAddTodo);
 
   const addTodoToProject = (e) => {
@@ -120,24 +147,35 @@ export function addTodo() {
       check = 'unchecked';
     }
 
-    const dueDateInput = dueDate.value.replace(/-/g, ',').split(',').map((item) => (Number(item)));
+    const dueDateInput = dueDate.value
+      .replace(/-/g, ',')
+      .split(',')
+      .map((item) => Number(item));
     const timeInput = time.value.split('');
     const hours = timeInput[0] + timeInput[1];
     const minutes = timeInput[3] + timeInput[4];
     let dueDateValue = '';
     let timeValue = '';
-    
+
     if (dueDate.value) {
       dueDateValue = format(new Date(dueDateInput), 'EEE MM-dd-yyyy');
     }
     if (time.value) {
       timeValue = format(new Date(2025, 7, 28, hours, minutes), 'h:mm aaa');
     }
-    
+
     projectTitle = projectTitleBtn.textContent;
     projectList = update.getProjectList();
 
-    let newTodo = todoGenerator(projectTitle, check, title.value, description.value, dueDateValue, timeValue, priority.value);
+    let newTodo = todoGenerator(
+      projectTitle,
+      check,
+      title.value,
+      description.value,
+      dueDateValue,
+      timeValue,
+      priority.value,
+    );
 
     if (defaultTodo) {
       newTodo = defaultTodo;
@@ -162,10 +200,10 @@ export function addTodo() {
 
     updateProjectList(projectTitle, projectList);
     closeAddTodo();
-  }
+  };
   addBtn.addEventListener('click', addTodoToProject);
-  
-  return {addTodoToProject};
+
+  return { addTodoToProject };
 }
 
 export function todoController() {
@@ -200,7 +238,7 @@ export function todoController() {
 
   const prepareOpenControlTodo = (currentList) => {
     const todoItem = document.querySelector('.todo-item');
-    
+
     if (currentList[0]) {
       if (currentList[0].id === 0) {
         return;
@@ -236,14 +274,17 @@ export function todoController() {
     } else if (e.target.classList.contains('todo-due-date-container')) {
       id = e.target.parentElement.dataset.id;
       checkMark = e.target.previousElementSibling.children[0];
-    } else if (e.target.classList.contains('todo-due-date') || e.target.classList.contains('todo-time')) {
+    } else if (
+      e.target.classList.contains('todo-due-date') ||
+      e.target.classList.contains('todo-time')
+    ) {
       id = e.target.parentElement.parentElement.dataset.id;
       checkMark = e.target.parentElement.previousElementSibling.children[0];
     } else {
       id = e.target.parentElement.parentElement.parentElement.parentElement.dataset.id;
       checkMark = e.target.parentElement.parentElement;
     }
-    
+
     projectList.forEach((list) => {
       if (list[0].project === projectTitle) {
         list.forEach((todo) => {
@@ -261,7 +302,7 @@ export function todoController() {
         });
       }
     });
-    
+
     todoDescription.textContent = currentDescription;
     dialogControlTodo.showModal();
   };
@@ -269,18 +310,17 @@ export function todoController() {
   const closeControlTodo = (e) => {
     e.preventDefault();
     dialogControlTodo.close();
-  }
+  };
   cancelTodoBtn.addEventListener('click', closeControlTodo);
 
   const finishTodo = (e) => {
     e.preventDefault();
-    
+
     projectTitle = projectTitleBtn.textContent;
     projectList = update.getProjectList();
 
     projectList.forEach((list) => {
       if (list[0].project === projectTitle) {
-
         list.forEach((todo) => {
           if (todo.id === id) {
             if (checkMark.classList.contains('unchecked')) {
@@ -294,10 +334,11 @@ export function todoController() {
         });
       }
     });
-    
+
     updateProjectList(projectTitle, projectList);
     closeControlTodo(e);
   };
+
   finishTodoBtn.addEventListener('click', finishTodo);
 
   const openEditTodo = (e) => {
@@ -320,7 +361,7 @@ export function todoController() {
     });
 
     currentTodo = projectList[listIndex][editIndex];
-    
+
     const date = currentTodo.dueDate.slice(4).split('-');
     const currentDueDate = date[2] + '-' + date[0] + '-' + date[1];
     const time = formatTime(currentTodo.time.slice(0).split(''));
@@ -336,13 +377,13 @@ export function todoController() {
   };
   editTodoBtn.addEventListener('click', openEditTodo);
 
-  const closeEditTodo  = (e) => {
+  const closeEditTodo = (e) => {
     e.preventDefault();
     alertNoEditTitle.style.visibility = 'hidden';
     dialogEditTodo.close();
   };
   cancelEditBtn.addEventListener('click', closeEditTodo);
-  
+
   const editTodo = (e) => {
     e.preventDefault();
 
@@ -354,16 +395,19 @@ export function todoController() {
       return;
     }
 
-    const dueDateInput = dueDateForEdit.value.replace(/-/g, ',').split(',').map((item) => (Number(item)));
+    const dueDateInput = dueDateForEdit.value
+      .replace(/-/g, ',')
+      .split(',')
+      .map((item) => Number(item));
     const timeInput = timeForEdit.value.split('');
     const hours = timeInput[0] + timeInput[1];
     const minutes = timeInput[3] + timeInput[4];
     let dueDateValue = '';
     let timeValue = '';
-    
+
     if (dueDateForEdit.value !== '') {
       dueDateValue = format(new Date(dueDateInput), 'EEE MM-dd-yyyy');
-    }   
+    }
     if (timeForEdit.value !== '') {
       timeValue = format(new Date(2025, 7, 28, hours, minutes), 'h:mm aaa');
     }
@@ -380,10 +424,10 @@ export function todoController() {
       const reorderedList = reorderList(projectList[listIndex]);
       projectList[listIndex] = reorderedList;
     }
-    
+
     updateProjectList(projectTitle, projectList);
     closeEditTodo(e);
-  }
+  };
   editBtn.addEventListener('click', editTodo);
 
   const openDeleteTodo = (e) => {
@@ -418,17 +462,17 @@ export function todoController() {
     });
 
     if (projectList[listIndex][0] === undefined) {
-      const idObject = {id: 0, project: projectTitle};
+      const idObject = { id: 0, project: projectTitle };
       projectList[listIndex].push(idObject);
     }
-    
+
     updateProjectList(projectTitle, projectList);
     closeDeleteTodo(e);
   };
   deleteBtn.addEventListener('click', deleteTodo);
-  
-  return {prepareOpenControlTodo};
-};
+
+  return { prepareOpenControlTodo };
+}
 
 let update;
 

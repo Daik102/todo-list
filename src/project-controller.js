@@ -1,4 +1,4 @@
-import { updateProjectList } from "./index";
+import { updateProjectList } from './index';
 
 export function projectController() {
   const dialogControlProject = document.querySelector('.dialog-control-project');
@@ -33,6 +33,7 @@ export function projectController() {
   const openControlProject = () => {
     dialogControlProject.showModal();
   };
+
   projectTitleBtn.addEventListener('click', (e) => {
     if (projectTitleBtn.textContent === 'Start Project') {
       openCreateProject(e);
@@ -40,11 +41,12 @@ export function projectController() {
       openControlProject();
     }
   });
- 
+
   const closeControlProject = (e) => {
     e.preventDefault();
     dialogControlProject.close();
   };
+
   cancelProjectBtn.addEventListener('click', closeControlProject);
 
   const openCreateProject = (e) => {
@@ -52,6 +54,7 @@ export function projectController() {
     closeControlProject(e);
     dialogCreateProject.showModal();
   };
+
   createProjectBtn.addEventListener('click', openCreateProject);
 
   const closeCreateProject = (e) => {
@@ -63,6 +66,7 @@ export function projectController() {
     alertNoProjectTitle.style.visibility = 'hidden';
     alertDuplicatedTitle.style.visibility = 'hidden';
   };
+
   cancelCreateBtn.addEventListener('click', closeCreateProject);
 
   const createProject = (e) => {
@@ -96,13 +100,13 @@ export function projectController() {
       duplicatedTitle = false;
       return;
     }
-    
+
     const newProject = [];
-    const idObject = {id: 0, project: projectTitle};
+    const idObject = { id: 0, project: projectTitle };
     newProject.push(idObject);
 
-    if (addTodoBtn.style.visibility = 'hidden') {
-      addTodoBtn.style.visibility = 'visible';
+    if (addTodoBtn.classList.contains('hidden')) {
+      addTodoBtn.classList.replace('hidden', 'visible');
     }
 
     projectList.push(newProject);
@@ -116,6 +120,7 @@ export function projectController() {
     updateProjectList(projectTitle, projectList);
     closeCreateProject(e);
   };
+
   createBtn.addEventListener('click', createProject);
 
   const getProjectList = () => projectList;
@@ -128,6 +133,7 @@ export function projectController() {
     editTitleInput.value = projectTitle;
     dialogEditProject.showModal();
   };
+
   editProjectBtn.addEventListener('click', openEditProject);
 
   const closeEditProject = (e) => {
@@ -137,6 +143,7 @@ export function projectController() {
     alertNoEditTitle.style.visibility = 'hidden';
     alertDuplicatedEditTitle.style.visibility = 'hidden';
   };
+
   cancelEditBtn.addEventListener('click', closeEditProject);
 
   const editProject = (e) => {
@@ -177,19 +184,22 @@ export function projectController() {
     updateProjectList(newProjectTitle, projectList);
     closeEditProject(e);
   };
+
   editBtn.addEventListener('click', editProject);
 
   const openDeleteProject = (e) => {
     e.preventDefault();
     closeControlProject(e);
     dialogDeleteProject.showModal();
-  }
+  };
+
   deleteProjectBtn.addEventListener('click', openDeleteProject);
 
   const closeDeleteProject = (e) => {
     e.preventDefault();
     dialogDeleteProject.close();
   };
+
   cancelDeleteBtn.addEventListener('click', closeDeleteProject);
 
   const deleteProject = (e) => {
@@ -212,11 +222,11 @@ export function projectController() {
     });
 
     if (projectList[0] === undefined) {
-      projectTitle  = 'Start Project';
-      addTodoBtn.style.visibility = 'hidden';
+      projectTitle = 'Start Project';
+      addTodoBtn.classList.replace('visible', 'hidden');
     } else if (projectList.length === 1) {
       projectTitle = projectList[0].project;
-      arrowBtns.forEach((btn) => btn.style.visibility = 'hidden');
+      arrowBtns.forEach((btn) => (btn.style.visibility = 'hidden'));
     } else {
       projectTitle = projectList[listIndex][0].project;
     }
@@ -224,6 +234,7 @@ export function projectController() {
     updateProjectList(projectTitle, projectList);
     closeDeleteProject(e);
   };
+
   deleteBtn.addEventListener('click', deleteProject);
 
   const switchProject = (arrowBtn, initialLoading) => {
@@ -242,7 +253,6 @@ export function projectController() {
 
     if (arrowBtn) {
       if (arrowBtn.classList.contains('left-btn')) {
-
         projectList.forEach((list, i) => {
           if (list[0].project === projectTitle) {
             listIndex = i - 1;
@@ -252,7 +262,6 @@ export function projectController() {
           }
         });
       } else if (arrowBtn.classList.contains('right-btn')) {
-
         projectList.forEach((list, i) => {
           if (list[0].project === projectTitle) {
             listIndex = i + 1;
@@ -266,14 +275,19 @@ export function projectController() {
     if (projectList[0] !== undefined) {
       projectTitle = projectList[listIndex][0].project;
     }
-    
+
     updateProjectList(projectTitle, projectList);
   };
+
   arrowBtns.forEach((btn) => {
     btn.addEventListener('click', (e) => switchProject(e.target));
   });
 
-  return {createProject, getProjectList, switchProject};
+  return {
+    createProject,
+    getProjectList,
+    switchProject,
+  };
 }
 
 let update;

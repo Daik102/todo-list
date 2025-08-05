@@ -1,0 +1,397 @@
+@font-face {
+  font-family: Roboto;
+  src: url(./fonts/Roboto-VariableFont_wdth\,wght.woff2) format('woff2');
+}
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-size: 10px;
+  font-family: Roboto, Arial, Helvetica, sans-serif;
+  color: var(--main-theme);
+}
+
+:root {
+  --main-theme: #111;
+  --gray-theme: #888;
+  --lightgray-theme: #d1d1d1;
+  --white-theme: #faffff;
+  --red-theme: #ff5011;
+  --orange-theme: #ffa500;
+  --yellow-theme: #ffe600;
+  --lightgreen-theme: #90ee90;
+  --lightblue-theme: #2cffff;
+  --pink-theme: #ffa8dc;
+  --transparent-theme: #0000;
+  --modal-theme: rgba(0, 0, 0, 0.6);
+  --background-theme: #3d81b9;
+}
+
+body {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  height: 100vh;
+  background-color: var(--background-theme);
+}
+
+button {
+  border: none;
+}
+
+button:hover {
+  cursor: pointer;
+  opacity: 0.8;
+}
+
+dialog {
+  width: 48rem;
+  margin: 21.2rem auto;
+  border: none;
+
+  background-color: var(--white-theme);
+}
+
+dialog::backdrop {
+  background-color: var(--modal-theme);
+}
+
+.dialog-header {
+  font-size: 2.8rem;
+}
+
+dialog label,
+dialog input,
+dialog textarea,
+dialog p,
+dialog select,
+dialog option {
+  font-size: 2rem;
+}
+
+dialog svg {
+  width: 2rem;
+  fill: var(--orange-theme);
+}
+
+.dialog-create-project,
+.dialog-edit-project,
+.dialog-delete-project,
+.dialog-delete-todo {
+  padding: 4.8rem 2rem 2rem;
+}
+
+.dialog-control-project,
+.dialog-control-todo {
+  padding: 6rem 2rem 3.4rem;
+}
+
+.dialog-create-project form,
+.dialog-edit-project form,
+.dialog-delete-project form,
+.dialog-delete-todo form {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+
+.dialog-create-project form,
+.dialog-edit-project form {
+  gap: 4rem;
+  padding: 0.8rem 0 1.2rem;
+}
+
+.dialog-delete-project form,
+.dialog-delete-todo form {
+  gap: 8.8rem;
+  padding: 5rem 0 1.2rem;
+}
+
+.alert-no-project-title,
+.alert-no-edit-project-title {
+  visibility: hidden;
+  margin: -3.6rem 4rem 0 0;
+}
+
+.alert-duplicated-title,
+.alert-duplicated-edit-title {
+  visibility: hidden;
+  margin: -7.2rem 4rem 0 0;
+  translate: 1.5rem 0.7rem;
+}
+
+.dialog-control-project .btn-container,
+.dialog-control-todo .btn-container {
+  display: flex;
+  flex-direction: column;
+  gap: 2.8rem;
+  padding: 1rem 2rem 3rem;
+}
+
+.todo-description {
+  margin: 0 1.6rem 4.8rem;
+  padding: 1.2rem;
+  border: 0.2rem solid var(--main-theme);
+  border-radius: 0.4rem;
+}
+
+.no-todo-description {
+  color: var(--gray-theme);
+}
+
+.dialog-add-todo,
+.dialog-edit-todo {
+  padding: 2.8rem 3.8rem 2.6rem;
+}
+
+.dialog-add-todo form,
+.dialog-edit-todo form {
+  display: flex;
+  flex-direction: column;
+  align-items: start;
+}
+
+.dialog-add-todo textarea,
+.dialog-edit-todo textarea {
+  resize: none;
+  width: 40rem;
+}
+
+.alert-no-todo-title,
+.alert-no-edit-todo-title {
+  visibility: hidden;
+  margin: 0.4rem 0 0 4.8rem;
+}
+
+.dialog-add-todo .btn-container,
+.dialog-edit-todo .btn-container {
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  margin-top: 2.6rem;
+}
+
+.create-btn,
+.add-btn,
+.finish-btn {
+  background-color: var(--lightblue-theme);
+}
+
+.edit-btn {
+  background-color: var(--lightgreen-theme);
+}
+
+.delete-btn {
+  background-color: var(--pink-theme);
+}
+
+.cancel-btn {
+  background-color: var(--lightgray-theme);
+}
+
+#description,
+#description-for-edit {
+  margin-bottom: 2.4rem;
+  padding: 0.8rem;
+}
+
+.date-time-row {
+  display: flex;
+  gap: 2rem;
+  margin-bottom: 2.4rem;
+}
+
+#due-date,
+#due-date-for-edit {
+  width: 14.8rem;
+}
+
+#priority,
+#priority-for-edit {
+  width: 10rem;
+}
+
+.app-title {
+  margin: 2rem 0 4rem;
+  font-size: 4rem;
+  font-weight: 200;
+  color: var(--white-theme);
+}
+
+.btn {
+  padding: 1rem 2rem;
+  font-size: 2rem;
+  font-weight: 500;
+  border-radius: 0.8rem;
+}
+
+.add-todo-btn {
+  background-color: var(--lightblue-theme);
+}
+
+.hidden {
+  visibility: hidden;
+}
+
+.visible {
+  visibility: visible;
+}
+
+.main {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 48rem;
+  margin: 0 auto;
+  padding: 4rem 0 0;
+  background-color: var(--main-theme);
+}
+
+.btn-container {
+  display: flex;
+  justify-content: center;
+  gap: 3.2rem;
+  margin-top: 1.2rem;
+}
+
+.main .btn-container {
+  margin-bottom: 4rem;
+}
+
+.project-title-row {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 1rem;
+  margin-bottom: 3.6rem;
+}
+
+.arrow-btn {
+  visibility: hidden;
+  font-size: 2.4rem;
+  background-color: var(--main-theme);
+  color: var(--white-theme);
+}
+
+.left-btn {
+  padding: 0 0.4rem 0 2rem;
+}
+
+.right-btn {
+  padding: 0 2rem 0 0.4rem;
+}
+
+.project-title-btn {
+  padding: 0.4rem;
+  font-size: 2.8rem;
+  font-weight: 500;
+  background-color: var(--main-theme);
+  color: var(--white-theme);
+}
+
+#todo-container {
+  width: 100%;
+  list-style: none;
+}
+
+.todo-item {
+  width: 100%;
+  height: 10rem;
+  padding: 2rem;
+  border-bottom: 0.1rem solid var(--lightgray-theme);
+  background-color: var(--white-theme);
+  cursor: pointer;
+}
+
+.todo-item:hover {
+  opacity: 0.85;
+  border-bottom: none;
+}
+
+.todo-item:last-child {
+  border-bottom: none;
+}
+
+.todo-title-row {
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
+  gap: 1rem;
+  margin-bottom: 2rem;
+}
+
+.todo-title {
+  flex: 1;
+  text-wrap: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  font-size: 2.2rem;
+  font-weight: 500;
+}
+
+.check-mark {
+  width: 2rem;
+  height: 2rem;
+  fill: var(--transparent-theme);
+  background-color: var(--lightgray-theme);
+}
+
+.low {
+  background-color: var(--lightgreen-theme);
+}
+
+.medium {
+  background-color: var(--yellow-theme);
+}
+
+.high {
+  background-color: var(--red-theme);
+}
+
+.checked {
+  fill: var(--lightblue-theme);
+  background-color: var(--main-theme);
+}
+
+.todo-date-row {
+  display: flex;
+  justify-content: space-between;
+}
+
+.todo-due-date-container {
+  margin-left: 3rem;
+  font-weight: 500;
+}
+
+.todo-due-date,
+.todo-time {
+  font-size: 2rem;
+  color: var(--gray-theme);
+}
+
+.todo-due-date-margin {
+  margin-right: 1.2rem;
+}
+
+.footer {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 48rem;
+  margin: 0 auto;
+  padding: 2.8rem 0;
+  background-color: var(--main-theme);
+}
+
+.admin-link {
+  font-size: 1.4rem;
+  color: var(--white-theme);
+  text-decoration: none;
+}
+
+.admin-link:hover {
+  text-decoration: underline;
+}

@@ -4,7 +4,7 @@ export function renderTodo(projectTitle, renderingList) {
   let todoHTML = '';
 
   projectTitleBtn.textContent = projectTitle;
-  
+
   if (renderingList[0]) {
     if (renderingList[0].id !== 0) {
       let margin = '';
@@ -35,5 +35,6 @@ export function renderTodo(projectTitle, renderingList) {
       });
     }
   }
-  todoContainer.innerHTML = todoHTML;  
+
+  todoContainer.innerHTML = todoHTML;
 }

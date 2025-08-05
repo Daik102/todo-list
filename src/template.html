@@ -1,179 +1,218 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Todo List</title>
-  <link rel="icon" href="./images/format-list-checks-custom.png" type="image/x-icon">
-</head>
-<body>
-  <dialog class="dialog-control-project">
-    <form>
-      <p class="btn-container">
-        <button class="btn create-btn create-project-btn">New Project</button>
-        <button class="btn edit-btn edit-project-btn">Edit</button>
-        <button class="btn delete-btn delete-project-btn">Delete</button>
-        <button class="btn cancel-btn cancel-project-btn">Cancel</button>
-      </p>
-    </form>
-  </dialog>
-  <dialog class="dialog-create-project">
-    <form>
-      <h2 class="dialog-header">What is your project?</h2>
-      <input type="text" id="project-title" maxlength="40">
-      <p class="alert alert-no-project-title">
-        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M5,3H19A2,2 0 0,1 21,5V19A2,2 0 0,1 19,21H5A2,2 0 0,1 3,19V5A2,2 0 0,1 5,3M13,13V7H11V13H13M13,17V15H11V17H13Z" /></svg>
-        Please fill out this field
-      </p>
-      <p class="alert alert-duplicated-title">
-        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M5,3H19A2,2 0 0,1 21,5V19A2,2 0 0,1 19,21H5A2,2 0 0,1 3,19V5A2,2 0 0,1 5,3M13,13V7H11V13H13M13,17V15H11V17H13Z" /></svg>
-        This project already exists
-      </p>
-      <p class="btn-container">
-        <button class="btn cancel-btn cancel-create-btn">Cancel</button>
-        <button class="btn create-btn create-btn-for-project">Create</button>
-      </p>
-    </form>
-  </dialog>
-  <dialog class="dialog-edit-project">
-    <form>
-      <h2 class="dialog-header">Enter the new title</h2>
-      <input type="text" id="edit-project-title" maxlength="40">
-      <p class="alert alert-no-edit-project-title">
-        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M5,3H19A2,2 0 0,1 21,5V19A2,2 0 0,1 19,21H5A2,2 0 0,1 3,19V5A2,2 0 0,1 5,3M13,13V7H11V13H13M13,17V15H11V17H13Z" /></svg>
-        Please fill out this field
-      </p>
-      <p class="alert alert-duplicated-edit-title">
-        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M5,3H19A2,2 0 0,1 21,5V19A2,2 0 0,1 19,21H5A2,2 0 0,1 3,19V5A2,2 0 0,1 5,3M13,13V7H11V13H13M13,17V15H11V17H13Z" /></svg>
-        This project already exists
-      </p>
-      <p class="btn-container">
-        <button class="btn cancel-btn cancel-edit-btn-for-project">Cancel</button>
-        <button class="btn edit-btn edit-btn-for-project">Edit</button>
-      </p>
-    </form>
-  </dialog>
-  <dialog class="dialog-delete-project">
-    <form>
-      <h2 class="dialog-header">Are you sure to delete this project?</h2>
-      <p class="btn-container">
-        <button class="btn cancel-btn cancel-delete-btn-for-project">Cancel</button>
-        <button class="btn delete-btn delete-btn-for-project">Delete</button>
-      </p>
-    </form>
-  </dialog>
-  <dialog class="dialog-add-todo">
-    <form>
-      <p>
-        <label for="title">Title: </label>
-        <input type="text" id="title">
-      </p>
-      <p class="alert alert-no-todo-title">
-        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M5,3H19A2,2 0 0,1 21,5V19A2,2 0 0,1 19,21H5A2,2 0 0,1 3,19V5A2,2 0 0,1 5,3M13,13V7H11V13H13M13,17V15H11V17H13Z" /></svg>
-        Please fill out this field
-      </p>
-      <p class="description-container">
-        <label for="description">Description: </label>
-        <textarea name="description" id="description" rows="3" maxlength="400"></textarea>
-      </p>
-      <div class="date-time-row">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Todo List</title>
+    <link rel="icon" href="./images/format-list-checks-custom.png" type="image/x-icon" />
+  </head>
+  <body>
+    <dialog class="dialog-control-project">
+      <form>
+        <p class="btn-container">
+          <button class="btn create-btn create-project-btn">New Project</button>
+          <button class="btn edit-btn edit-project-btn">Edit</button>
+          <button class="btn delete-btn delete-project-btn">Delete</button>
+          <button class="btn cancel-btn cancel-project-btn">Cancel</button>
+        </p>
+      </form>
+    </dialog>
+    <dialog class="dialog-create-project">
+      <form>
+        <h2 class="dialog-header">What is your project?</h2>
+        <input type="text" id="project-title" maxlength="40" />
+        <p class="alert alert-no-project-title">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+            <path
+              d="M5,3H19A2,2 0 0,1 21,5V19A2,2 0 0,1 19,21H5A2,2 0 0,1 3,19V5A2,2 0 0,1 5,3M13,13V7H11V13H13M13,17V15H11V17H13Z"
+            />
+          </svg>
+          Please fill out this field
+        </p>
+        <p class="alert alert-duplicated-title">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+            <path
+              d="M5,3H19A2,2 0 0,1 21,5V19A2,2 0 0,1 19,21H5A2,2 0 0,1 3,19V5A2,2 0 0,1 5,3M13,13V7H11V13H13M13,17V15H11V17H13Z"
+            />
+          </svg>
+          This project already exists
+        </p>
+        <p class="btn-container">
+          <button class="btn cancel-btn cancel-create-btn">Cancel</button>
+          <button class="btn create-btn create-btn-for-project">Create</button>
+        </p>
+      </form>
+    </dialog>
+    <dialog class="dialog-edit-project">
+      <form>
+        <h2 class="dialog-header">Enter the new title</h2>
+        <input type="text" id="edit-project-title" maxlength="40" />
+        <p class="alert alert-no-edit-project-title">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+            <path
+              d="M5,3H19A2,2 0 0,1 21,5V19A2,2 0 0,1 19,21H5A2,2 0 0,1 3,19V5A2,2 0 0,1 5,3M13,13V7H11V13H13M13,17V15H11V17H13Z"
+            />
+          </svg>
+          Please fill out this field
+        </p>
+        <p class="alert alert-duplicated-edit-title">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+            <path
+              d="M5,3H19A2,2 0 0,1 21,5V19A2,2 0 0,1 19,21H5A2,2 0 0,1 3,19V5A2,2 0 0,1 5,3M13,13V7H11V13H13M13,17V15H11V17H13Z"
+            />
+          </svg>
+          This project already exists
+        </p>
+        <p class="btn-container">
+          <button class="btn cancel-btn cancel-edit-btn-for-project">Cancel</button>
+          <button class="btn edit-btn edit-btn-for-project">Edit</button>
+        </p>
+      </form>
+    </dialog>
+    <dialog class="dialog-delete-project">
+      <form>
+        <h2 class="dialog-header">Are you sure to delete this project?</h2>
+        <p class="btn-container">
+          <button class="btn cancel-btn cancel-delete-btn-for-project">Cancel</button>
+          <button class="btn delete-btn delete-btn-for-project">Delete</button>
+        </p>
+      </form>
+    </dialog>
+    <dialog class="dialog-add-todo">
+      <form>
         <p>
-          <label for="due-date">Date: </label>
-          <input type="date" id="due-date">
+          <label for="title">Title: </label>
+          <input type="text" id="title" />
+        </p>
+        <p class="alert alert-no-todo-title">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+            <path
+              d="M5,3H19A2,2 0 0,1 21,5V19A2,2 0 0,1 19,21H5A2,2 0 0,1 3,19V5A2,2 0 0,1 5,3M13,13V7H11V13H13M13,17V15H11V17H13Z"
+            />
+          </svg>
+          Please fill out this field
+        </p>
+        <p class="description-container">
+          <label for="description">Description: </label>
+          <textarea
+            name="description"
+            id="description"
+            rows="3"
+            maxlength="400"
+          ></textarea>
+        </p>
+        <div class="date-time-row">
+          <p>
+            <label for="due-date">Date: </label>
+            <input type="date" id="due-date" />
+          </p>
+          <p>
+            <label for="time">Time: </label>
+            <input type="time" id="time" />
+          </p>
+        </div>
+        <p>
+          <label for="priority">Priority: </label>
+          <select name="priority" id="priority">
+            <option value="unset"></option>
+            <option value="low">Low</option>
+            <option value="medium">Medium</option>
+            <option value="high">High</option>
+          </select>
+        </p>
+        <p class="btn-container">
+          <button class="btn cancel-btn cancel-add-btn-for-project">Cancel</button>
+          <button class="btn add-btn add-btn-for-project">Add</button>
+        </p>
+      </form>
+    </dialog>
+    <dialog class="dialog-control-todo">
+      <form>
+        <p class="todo-description">No description</p>
+        <p class="btn-container">
+          <button class="btn finish-btn finish-todo-btn">Complete!</button>
+          <button class="btn edit-btn edit-todo-btn">Edit</button>
+          <button class="btn delete-btn delete-todo-btn">Delete</button>
+          <button class="btn cancel-btn cancel-todo-btn">Cancel</button>
+        </p>
+      </form>
+    </dialog>
+    <dialog class="dialog-edit-todo">
+      <form>
+        <p>
+          <label for="title">Title: </label>
+          <input type="text" id="title-for-edit" />
+        </p>
+        <p class="alert alert-no-edit-todo-title">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+            <path
+              d="M5,3H19A2,2 0 0,1 21,5V19A2,2 0 0,1 19,21H5A2,2 0 0,1 3,19V5A2,2 0 0,1 5,3M13,13V7H11V13H13M13,17V15H11V17H13Z"
+            />
+          </svg>
+          Please fill out this field
         </p>
         <p>
-          <label for="time">Time: </label>
-          <input type="time" id="time">
+          <label for="description">Description: </label>
+          <textarea
+            name="description"
+            id="description-for-edit"
+            rows="3"
+            maxlength="400"
+          ></textarea>
         </p>
+        <div class="date-time-row">
+          <p>
+            <label for="due-date">Date: </label>
+            <input type="date" id="due-date-for-edit" />
+          </p>
+          <p>
+            <label for="time">Time: </label>
+            <input type="time" id="time-for-edit" />
+          </p>
+        </div>
+        <p>
+          <label for="priority">Priority: </label>
+          <select name="priority" id="priority-for-edit">
+            <option value="unset"></option>
+            <option value="low">Low</option>
+            <option value="medium">Medium</option>
+            <option value="high">High</option>
+          </select>
+        </p>
+        <p class="btn-container">
+          <button class="btn cancel-btn cancel-edit-btn-for-todo">Cancel</button>
+          <button class="btn edit-btn edit-btn-for-todo">Edit</button>
+        </p>
+      </form>
+    </dialog>
+    <dialog class="dialog-delete-todo">
+      <form>
+        <h2 class="dialog-header">Are you sure to delete this item?</h2>
+        <p class="btn-container">
+          <button class="btn cancel-btn cancel-delete-btn-for-todo">Cancel</button>
+          <button class="btn delete-btn delete-btn-for-todo">Delete</button>
+        </p>
+      </form>
+    </dialog>
+    <div class="main">
+      <h1 class="app-title">Odin Todo List</h1>
+      <div class="project-title-row">
+        <button class="arrow-btn left-btn">&#9664;</button>
+        <button class="project-title-btn">Start Project</button>
+        <button class="arrow-btn right-btn">&#9654;</button>
       </div>
-      <p>
-        <label for="priority">Priority: </label>
-        <select name="priority" id="priority">
-          <option value="unset"></option>
-          <option value="low">Low</option>
-          <option value="medium">Medium</option>
-          <option value="high">High</option>
-        </select>
-      </p>
-      <p class="btn-container">
-        <button class="btn cancel-btn cancel-add-btn-for-project">Cancel</button>
-        <button class="btn add-btn add-btn-for-project">Add</button>
-      </p>
-    </form>
-  </dialog>
-  <dialog class="dialog-control-todo">
-    <form>
-      <p class="todo-description">No description</p>
-      <p class="btn-container">
-        <button class="btn finish-btn finish-todo-btn">Complete!</button>
-        <button class="btn edit-btn edit-todo-btn">Edit</button>
-        <button class="btn delete-btn delete-todo-btn">Delete</button>
-        <button class="btn cancel-btn cancel-todo-btn">Cancel</button>
-      </p>
-    </form>
-  </dialog>
-  <dialog class="dialog-edit-todo">
-    <form>
-      <p>
-        <label for="title">Title: </label>
-        <input type="text" id="title-for-edit">
-      </p>
-      <p class="alert alert-no-edit-todo-title">
-        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M5,3H19A2,2 0 0,1 21,5V19A2,2 0 0,1 19,21H5A2,2 0 0,1 3,19V5A2,2 0 0,1 5,3M13,13V7H11V13H13M13,17V15H11V17H13Z" /></svg>
-        Please fill out this field
-      </p>
-      <p>
-        <label for="description">Description: </label>
-        <textarea name="description" id="description-for-edit" rows="3" maxlength="400"></textarea>
-      </p>
-      <div class="date-time-row">
-         <p>
-          <label for="due-date">Date: </label>
-          <input type="date" id="due-date-for-edit">
-        </p>
-        <p>
-          <label for="time">Time: </label>
-          <input type="time" id="time-for-edit">
-        </p>
+      <div class="btn-container">
+        <button class="btn add-todo-btn hidden">Add Todo</button>
       </div>
-      <p>
-        <label for="priority">Priority: </label>
-        <select name="priority" id="priority-for-edit">
-          <option value="unset"></option>
-          <option value="low">Low</option>
-          <option value="medium">Medium</option>
-          <option value="high">High</option>
-        </select>
-      </p>
-      <p class="btn-container">
-        <button class="btn cancel-btn cancel-edit-btn-for-todo">Cancel</button>
-        <button class="btn edit-btn edit-btn-for-todo">Edit</button>
-      </p>
-    </form>
-  </dialog>
-  <dialog class="dialog-delete-todo">
-    <form>
-      <h2 class="dialog-header">Are you sure to delete this item?</h2>
-      <p class="btn-container">
-        <button class="btn cancel-btn cancel-delete-btn-for-todo">Cancel</button>
-        <button class="btn delete-btn delete-btn-for-todo">Delete</button>
-      </p>
-    </form>
-  </dialog>
-  <div class="main">
-    <h1 class="app-title">Odin Todo List</h1>
-    <div class="project-title-row">
-      <button class="arrow-btn left-btn">&#9664;</button>
-      <button class="project-title-btn">Start Project</button>
-      <button class="arrow-btn right-btn">&#9654;</button>
+      <ul id="todo-container"></ul>
     </div>
-    <div class="btn-container">
-      <button class="btn add-todo-btn">Add Todo</button>
-    </div>
-    <ul id="todo-container"></ul>
-  </div>
-  <footer class="footer">
-    <a class="admin-link" href="https://daik102.github.io/admin-dashboard/" target="_blank">2025 Daik</a>
-  </footer>
-</body>
+    <footer class="footer">
+      <a
+        class="admin-link"
+        href="https://daik102.github.io/admin-dashboard/"
+        target="_blank"
+        >2025 Daik</a
+      >
+    </footer>
+  </body>
 </html>
