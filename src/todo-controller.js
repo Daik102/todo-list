@@ -248,6 +248,13 @@ export function todoController() {
         const todoItems = document.querySelectorAll('.todo-item');
         todoItems.forEach((item) => {
           item.addEventListener('click', openControlTodo);
+
+          item.addEventListener('keydown', (e) => {
+            if (e.key === 'Enter') {
+              e.preventDefault();
+              openControlTodo(e);
+            }
+          });
         });
       } else {
         todoItem.addEventListener('click', openControlTodo);
