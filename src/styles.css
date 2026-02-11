@@ -7,50 +7,49 @@
   margin: 0;
   padding: 0;
   box-sizing: border-box;
-  font-size: 10px;
   font-family: Roboto, Arial, Helvetica, sans-serif;
-  color: var(--main-theme);
 }
 
 :root {
-  --main-theme: #111;
-  --gray-theme: #888;
-  --lightgray-theme: #d1d1d1;
-  --white-theme: #faffff;
+  --main-theme: rgba(17, 17, 17, 0.5);
+  --black-theme: #222;
+  --gray-theme: #788888;
+  --lightgray-theme: #b7c7c7;
+  --white-theme: #efffff;
   --red-theme: #ff5011;
   --orange-theme: #ffa500;
   --yellow-theme: #ffe600;
-  --lightgreen-theme: #90ee90;
-  --lightblue-theme: #2cffff;
-  --pink-theme: #ffa8dc;
+  --lightgreen-theme: #90ff90;
+  --super-lightblue-theme: #d7ffff;;
+  --lightblue-theme: #35ffff;
+  --pink-theme: #ffb4e2;
+  --shadow-theme: #788888;
+  --blue-shadow-theme: #25acac;
   --transparent-theme: #0000;
   --modal-theme: rgba(0, 0, 0, 0.6);
   --background-theme: #3d81b9;
 }
 
+html {
+  font-size: 10px;
+}
+
 body {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  height: 100vh;
   background-color: var(--background-theme);
 }
 
 button {
   border: none;
-}
-
-button:hover {
+  color: var(--black-theme);
   cursor: pointer;
-  opacity: 0.8;
 }
 
 dialog {
   width: 48rem;
-  margin: 21.2rem auto;
+  margin: 21.2rem auto 0;
   border: none;
-
-  background-color: var(--white-theme);
+  background-color: var(--super-lightblue-theme);
+  color: var(--black-theme);
 }
 
 dialog::backdrop {
@@ -133,8 +132,9 @@ dialog svg {
 .todo-description {
   margin: 0 1.6rem 4.8rem;
   padding: 1.2rem;
-  border: 0.2rem solid var(--main-theme);
+  border: 0.4rem double var(--black-theme);
   border-radius: 0.4rem;
+  background-color: var(--white-theme);
 }
 
 .no-todo-description {
@@ -214,7 +214,7 @@ dialog svg {
 }
 
 .app-title {
-  margin: 2rem 0 4rem;
+  margin-bottom: 4rem;
   font-size: 4rem;
   font-weight: 200;
   color: var(--white-theme);
@@ -225,10 +225,16 @@ dialog svg {
   font-size: 2rem;
   font-weight: 500;
   border-radius: 0.8rem;
+  box-shadow: 0.4rem 0.4rem 0 var(--shadow-theme);
+}
+
+.btn:hover {
+  color: var(--red-theme);
 }
 
 .add-todo-btn {
   background-color: var(--lightblue-theme);
+  box-shadow: 0.4rem 0.4rem 0 var(--blue-shadow-theme);
 }
 
 .hidden {
@@ -239,15 +245,24 @@ dialog svg {
   visibility: visible;
 }
 
+.wrapper {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 6rem;
+  width: 48rem;
+  min-height: 100vh;
+  margin: 0 auto;
+  padding: 6rem 0;
+  background-color: var(--main-theme);
+}
+
 .main {
   flex: 1;
   display: flex;
   flex-direction: column;
   align-items: center;
-  width: 48rem;
-  margin: 0 auto;
-  padding: 4rem 0 0;
-  background-color: var(--main-theme);
+  width: 100%;
 }
 
 .btn-container {
@@ -271,8 +286,9 @@ dialog svg {
 
 .arrow-btn {
   visibility: hidden;
-  font-size: 2.4rem;
-  background-color: var(--main-theme);
+  margin-top: -0.4rem;
+  font-size: 2.2rem;
+  background-color: var(--transparent-theme);
   color: var(--white-theme);
 }
 
@@ -284,24 +300,29 @@ dialog svg {
   padding: 0 2rem 0 0.4rem;
 }
 
+.arrow-btn:hover,
+.project-title-btn:hover {
+  opacity: 0.8;
+}
+
 .project-title-btn {
   padding: 0.4rem;
   font-size: 2.8rem;
   font-weight: 500;
-  background-color: var(--main-theme);
+  background-color: var(--transparent-theme);
   color: var(--white-theme);
 }
 
 #todo-container {
   width: 100%;
   list-style: none;
+  border-block: 0.2rem solid var(--black-theme);
 }
 
 .todo-item {
-  width: 100%;
   height: 10rem;
   padding: 2rem;
-  border-bottom: 0.1rem solid var(--lightgray-theme);
+  border-bottom: 0.2rem dashed var(--lightgray-theme);
   background-color: var(--white-theme);
   cursor: pointer;
 }
@@ -330,6 +351,7 @@ dialog svg {
   text-overflow: ellipsis;
   font-size: 2.2rem;
   font-weight: 500;
+  color: var(--black-theme);
 }
 
 .check-mark {
@@ -337,6 +359,7 @@ dialog svg {
   height: 2rem;
   fill: var(--transparent-theme);
   background-color: var(--lightgray-theme);
+  border: 0.2rem solid var(--black-theme);
 }
 
 .low {
@@ -353,7 +376,7 @@ dialog svg {
 
 .checked {
   fill: var(--lightblue-theme);
-  background-color: var(--main-theme);
+  background-color: var(--black-theme);
 }
 
 .todo-date-row {
@@ -380,14 +403,11 @@ dialog svg {
   display: flex;
   justify-content: center;
   align-items: center;
-  width: 48rem;
-  margin: 0 auto;
-  padding: 2.8rem 0;
-  background-color: var(--main-theme);
+  width: 100%;
 }
 
 .admin-link {
-  font-size: 1.4rem;
+  font-size: 1.6rem;
   color: var(--white-theme);
   text-decoration: none;
 }
