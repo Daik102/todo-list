@@ -1,18 +1,18 @@
 @font-face {
-  font-family: Roboto;
-  src: url(./fonts/Roboto-VariableFont_wdth\,wght.woff2) format('woff2');
+  font-family: Play-Bold;
+  src: url(./fonts/Play-Bold.woff2) format('woff2');
 }
 
 * {
   margin: 0;
   padding: 0;
   box-sizing: border-box;
-  font-family: Roboto, Arial, Helvetica, sans-serif;
+  font-family: Play-Bold, Arial, Helvetica, sans-serif;
 }
 
 :root {
   --main-theme: rgba(17, 17, 17, 0.5);
-  --black-theme: #222;
+  --black-theme: #333;
   --gray-theme: #788888;
   --lightgray-theme: #b7c7c7;
   --white-theme: #efffff;
@@ -26,16 +26,12 @@
   --shadow-theme: #788888;
   --blue-shadow-theme: #25acac;
   --transparent-theme: #0000;
-  --modal-theme: rgba(0, 0, 0, 0.6);
+  --modal-theme: rgba(0, 0, 0, 0.5);
   --background-theme: #3d81b9;
 }
 
 html {
   font-size: 10px;
-}
-
-body {
-  background-color: var(--background-theme);
 }
 
 button {
@@ -46,10 +42,9 @@ button {
 
 dialog {
   width: 48rem;
-  margin: 21.2rem auto 0;
+  margin: 22.4rem auto 0;
   border: none;
   background-color: var(--super-lightblue-theme);
-  color: var(--black-theme);
 }
 
 dialog::backdrop {
@@ -57,7 +52,7 @@ dialog::backdrop {
 }
 
 .dialog-header {
-  font-size: 2.8rem;
+  font-size: 2.6rem;
 }
 
 dialog label,
@@ -69,6 +64,13 @@ dialog option {
   font-size: 2rem;
 }
 
+dialog h2,
+dialog label,
+dialog input,
+dialog select {
+  color: var(--black-theme)
+}
+
 dialog svg {
   width: 2rem;
   fill: var(--orange-theme);
@@ -77,13 +79,13 @@ dialog svg {
 .dialog-create-project,
 .dialog-edit-project,
 .dialog-delete-project,
-.dialog-delete-todo {
+.dialog-delete-todo,
+.dialog-control-todo {
   padding: 4.8rem 2rem 2rem;
 }
 
-.dialog-control-project,
-.dialog-control-todo {
-  padding: 6rem 2rem 3.4rem;
+.dialog-control-project {
+  padding: 2.8rem 2rem 2rem;
 }
 
 .dialog-create-project form,
@@ -130,7 +132,7 @@ dialog svg {
 }
 
 .todo-description {
-  margin: 0 1.6rem 4.8rem;
+  margin: 0 1.6rem 3.6rem;
   padding: 1.2rem;
   border: 0.4rem double var(--black-theme);
   border-radius: 0.4rem;
@@ -143,7 +145,7 @@ dialog svg {
 
 .dialog-add-todo,
 .dialog-edit-todo {
-  padding: 2.8rem 3.8rem 2.6rem;
+  padding: 2.8rem 3.8rem;
 }
 
 .dialog-add-todo form,
@@ -156,7 +158,8 @@ dialog svg {
 .dialog-add-todo textarea,
 .dialog-edit-todo textarea {
   resize: none;
-  width: 40rem;
+  width: 100%;
+  color: var(--black-theme);
 }
 
 .alert-no-todo-title,
@@ -216,25 +219,24 @@ dialog svg {
 .app-title {
   margin-bottom: 4rem;
   font-size: 4rem;
-  font-weight: 200;
   color: var(--white-theme);
 }
 
 .btn {
   padding: 1rem 2rem;
   font-size: 2rem;
-  font-weight: 500;
   border-radius: 0.8rem;
-  box-shadow: 0.4rem 0.4rem 0 var(--shadow-theme);
+  box-shadow: 0 0.4rem 0 var(--shadow-theme);
+  transition: transform 0.15s;
 }
 
 .btn:hover {
-  color: var(--red-theme);
+  transform: translate(0, -0.6rem);
 }
 
 .add-todo-btn {
   background-color: var(--lightblue-theme);
-  box-shadow: 0.4rem 0.4rem 0 var(--blue-shadow-theme);
+  box-shadow: 0 0.4rem 0 var(--blue-shadow-theme);
 }
 
 .hidden {
@@ -250,11 +252,11 @@ dialog svg {
   flex-direction: column;
   align-items: center;
   gap: 6rem;
-  width: 48rem;
+  width: 100%;
   min-height: 100vh;
   margin: 0 auto;
   padding: 6rem 0;
-  background-color: var(--main-theme);
+  background-image: linear-gradient(var(--black-theme), var(--background-theme));
 }
 
 .main {
@@ -308,15 +310,15 @@ dialog svg {
 .project-title-btn {
   padding: 0.4rem;
   font-size: 2.8rem;
-  font-weight: 500;
   background-color: var(--transparent-theme);
   color: var(--white-theme);
 }
 
 #todo-container {
-  width: 100%;
+  width: 48rem;
   list-style: none;
-  border-block: 0.2rem solid var(--black-theme);
+  border: 0.4rem solid var(--lightgray-theme);
+  border-radius: 0.8rem;
 }
 
 .todo-item {
@@ -325,15 +327,24 @@ dialog svg {
   border-bottom: 0.2rem dashed var(--lightgray-theme);
   background-color: var(--white-theme);
   cursor: pointer;
+  transition: opacity 0.15s;
 }
 
 .todo-item:hover {
   opacity: 0.85;
-  border-bottom: none;
+}
+
+.todo-item:first-child {
+  border-radius: 0.4rem 0.4rem 0 0;
 }
 
 .todo-item:last-child {
   border-bottom: none;
+  border-radius: 0 0 0.4rem 0.4rem;
+}
+
+.todo-item:only-child {
+  border-radius: 0.4rem;
 }
 
 .todo-title-row {
@@ -350,7 +361,6 @@ dialog svg {
   overflow: hidden;
   text-overflow: ellipsis;
   font-size: 2.2rem;
-  font-weight: 500;
   color: var(--black-theme);
 }
 
@@ -386,7 +396,6 @@ dialog svg {
 
 .todo-due-date-container {
   margin-left: 3rem;
-  font-weight: 500;
 }
 
 .todo-due-date,
@@ -414,4 +423,65 @@ dialog svg {
 
 .admin-link:hover {
   text-decoration: underline;
+}
+
+@media screen and (orientation: portrait) and (max-width: 30rem) {
+  dialog,
+  #todo-container {
+    width: 88%;
+  }
+}
+
+@media screen and (orientation: landscape) and (max-height: calc(30rem - 100px)) {
+  dialog {
+    margin: 0 auto;
+  }
+}
+
+@media screen and (max-width: 20rem) {
+  html {
+    font-size: 6px;
+  }
+}
+
+@media screen and (min-width: 20.01rem) and (max-width: 24rem) {
+  html {
+    font-size: 7px;
+  }
+}
+
+@media screen and (min-width: 24.01rem) and (max-width: 47.99rem) {
+  html {
+    font-size: 8px;
+  }
+}
+
+@media screen and (min-width: 24.01rem) and (max-width: 47.99rem) and (min-height: calc(50rem - 100px)) {
+  html {
+    font-size: 8.5px;
+  }
+}
+
+@media screen and (min-width: 24.01rem) and (max-width: 47.99rem) and (min-height: calc(54rem - 100px)) {
+  html {
+    font-size: 9px;
+  }
+}
+
+@media screen and (min-width: 48rem) {
+  html {
+    font-size: 10px;
+  }
+}
+
+@media screen and (min-width: 48rem) and (min-height: calc(70rem - 100px)) {
+  html {
+    font-size: 12px;
+  }
+}
+
+@media screen and (min-width: 48rem) and (min-height: calc(82rem - 100px)) {
+  html {
+    font-size: 14px;
+  }
 }
