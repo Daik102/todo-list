@@ -14,17 +14,19 @@
   --main-theme: rgba(17, 17, 17, 0.5);
   --black-theme: #333;
   --gray-theme: #788888;
-  --lightgray-theme: #b7c7c7;
+  --lightgray-theme: #b5c5c5;
   --white-theme: #efffff;
   --red-theme: #ff5011;
   --orange-theme: #ffa500;
   --yellow-theme: #ffe600;
-  --lightgreen-theme: #90ff90;
+  --lightgreen-theme: #45ff45;
   --super-lightblue-theme: #d7ffff;;
-  --lightblue-theme: #35ffff;
-  --pink-theme: #ffb4e2;
+  --lightblue-theme: #00f4f4;
+  --pink-theme: #ff78cb;
   --shadow-theme: #788888;
   --blue-shadow-theme: #25acac;
+  --green-shadow-theme: #1ebd1e;
+  --pink-shadow-theme: #da5ba9;
   --transparent-theme: #0000;
   --modal-theme: rgba(0, 0, 0, 0.5);
   --background-theme: #3d81b9;
@@ -42,38 +44,13 @@ button {
 
 dialog {
   width: 48rem;
-  margin: 22.4rem auto 0;
-  border: none;
+  margin: 21.8rem auto 0;
+  border-radius: 0.8rem;
   background-color: var(--super-lightblue-theme);
 }
 
 dialog::backdrop {
   background-color: var(--modal-theme);
-}
-
-.dialog-header {
-  font-size: 2.6rem;
-}
-
-dialog label,
-dialog input,
-dialog textarea,
-dialog p,
-dialog select,
-dialog option {
-  font-size: 2rem;
-}
-
-dialog h2,
-dialog label,
-dialog input,
-dialog select {
-  color: var(--black-theme)
-}
-
-dialog svg {
-  width: 2rem;
-  fill: var(--orange-theme);
 }
 
 .dialog-create-project,
@@ -85,7 +62,7 @@ dialog svg {
 }
 
 .dialog-control-project {
-  padding: 2.8rem 2rem 2rem;
+  padding: 3.6rem 2rem 2rem;
 }
 
 .dialog-create-project form,
@@ -110,17 +87,57 @@ dialog svg {
   padding: 5rem 0 1.2rem;
 }
 
-.alert-no-project-title,
-.alert-no-edit-project-title {
-  visibility: hidden;
-  margin: -3.6rem 4rem 0 0;
+.dialog-add-todo,
+.dialog-edit-todo {
+  padding: 3.2rem;
 }
 
-.alert-duplicated-title,
-.alert-duplicated-edit-title {
-  visibility: hidden;
-  margin: -7.2rem 4rem 0 0;
-  translate: 1.5rem 0.7rem;
+.dialog-add-todo form,
+.dialog-edit-todo form {
+  display: flex;
+  flex-direction: column;
+  align-items: start;
+}
+
+.dialog-header {
+  font-size: 2.6rem;
+}
+
+dialog label,
+dialog input,
+dialog textarea,
+dialog p,
+dialog select {
+  font-size: 2rem;
+}
+
+.dialog-header,
+dialog label,
+dialog input,
+dialog textarea,
+dialog select {
+  color: var(--black-theme)
+}
+
+dialog label {
+  margin-right: 0.2rem;
+}
+
+dialog input,
+dialog textarea,
+dialog select {
+  background-color: var(--white-theme);
+  border-radius: 0.4rem;
+}
+
+dialog input,
+dialog select {
+  padding: 0.2rem;
+}
+
+dialog svg {
+  width: 2rem;
+  fill: var(--orange-theme);
 }
 
 .dialog-control-project .btn-container,
@@ -143,83 +160,43 @@ dialog svg {
   color: var(--gray-theme);
 }
 
-.dialog-add-todo,
-.dialog-edit-todo {
-  padding: 2.8rem 3.8rem;
-}
-
-.dialog-add-todo form,
-.dialog-edit-todo form {
-  display: flex;
-  flex-direction: column;
-  align-items: start;
-}
-
-.dialog-add-todo textarea,
-.dialog-edit-todo textarea {
-  resize: none;
+.description-container {
   width: 100%;
-  color: var(--black-theme);
-}
-
-.alert-no-todo-title,
-.alert-no-edit-todo-title {
-  visibility: hidden;
-  margin: 0.4rem 0 0 4.8rem;
-}
-
-.dialog-add-todo .btn-container,
-.dialog-edit-todo .btn-container {
-  width: 100%;
-  display: flex;
-  justify-content: center;
-  margin-top: 2.6rem;
-}
-
-.create-btn,
-.add-btn,
-.finish-btn {
-  background-color: var(--lightblue-theme);
-}
-
-.edit-btn {
-  background-color: var(--lightgreen-theme);
-}
-
-.delete-btn {
-  background-color: var(--pink-theme);
-}
-
-.cancel-btn {
-  background-color: var(--lightgray-theme);
+  margin-top: -0.4rem;
 }
 
 #description,
 #description-for-edit {
-  margin-bottom: 2.4rem;
-  padding: 0.8rem;
+  resize: none;
+  width: 100%;
+  margin-top: 0.4rem;
+  padding: 0.4rem;
 }
 
 .date-time-row {
   display: flex;
-  gap: 2rem;
-  margin-bottom: 2.4rem;
+  justify-content: space-between;
+  width: 100%;
+  margin: 2rem 0;
 }
 
 #due-date,
 #due-date-for-edit {
-  width: 14.8rem;
+  width: 15.6rem;
 }
 
-#priority,
-#priority-for-edit {
-  width: 10rem;
+.dialog-add-todo .btn-container,
+.dialog-edit-todo .btn-container {
+  display: flex;
+  justify-content: center;
+  width: 100%;
+  margin-top: 2.4rem;
 }
 
-.app-title {
-  margin-bottom: 4rem;
-  font-size: 4rem;
-  color: var(--white-theme);
+.btn-container {
+  display: flex;
+  justify-content: center;
+  gap: 2.8rem;
 }
 
 .btn {
@@ -227,24 +204,55 @@ dialog svg {
   font-size: 2rem;
   border-radius: 0.8rem;
   box-shadow: 0 0.4rem 0 var(--shadow-theme);
-  transition: transform 0.15s;
 }
 
 .btn:hover {
-  transform: translate(0, -0.6rem);
+  color: var(--white-theme);
 }
 
-.add-todo-btn {
+.create-btn,
+.add-btn,
+.complete-btn {
   background-color: var(--lightblue-theme);
-  box-shadow: 0 0.4rem 0 var(--blue-shadow-theme);
+  box-shadow: 0 0.6rem 0 var(--blue-shadow-theme);
 }
 
-.hidden {
+.edit-btn {
+  background-color: var(--lightgreen-theme);
+  box-shadow: 0 0.6rem 0 var(--green-shadow-theme);
+}
+
+.delete-btn {
+  background-color: var(--pink-theme);
+  box-shadow: 0 0.6rem 0 var(--pink-shadow-theme);
+}
+
+.cancel-btn {
+  background-color: var(--lightgray-theme);
+  box-shadow: 0 0.6rem 0 var(--shadow-theme);
+}
+
+.alert {
   visibility: hidden;
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+  color: var(--black-theme);
 }
 
-.visible {
-  visibility: visible;
+.alert-no-project-title,
+.alert-no-edit-project-title {
+  margin: -3.4rem 3.2rem 0 0;
+}
+
+.alert-duplicated-title,
+.alert-duplicated-edit-title {
+  margin-top: -6.2rem;
+}
+
+.alert-no-todo-title,
+.alert-no-edit-todo-title {
+  margin-left: 5rem;
 }
 
 .wrapper {
@@ -252,11 +260,9 @@ dialog svg {
   flex-direction: column;
   align-items: center;
   gap: 6rem;
-  width: 100%;
   min-height: 100vh;
-  margin: 0 auto;
   padding: 6rem 0;
-  background-image: linear-gradient(var(--black-theme), var(--background-theme));
+  background: linear-gradient(var(--black-theme), var(--background-theme));
 }
 
 .main {
@@ -264,18 +270,18 @@ dialog svg {
   display: flex;
   flex-direction: column;
   align-items: center;
-  width: 100%;
 }
 
-.btn-container {
-  display: flex;
-  justify-content: center;
-  gap: 3.2rem;
-  margin-top: 1.2rem;
+.app-title,
+.arrow-btn,
+.project-title-btn {
+  color: var(--white-theme);
 }
 
-.main .btn-container {
+.app-title {
   margin-bottom: 4rem;
+  font-size: 4rem;
+  text-shadow: 0 0.4rem var(--blue-shadow-theme);
 }
 
 .project-title-row {
@@ -283,7 +289,7 @@ dialog svg {
   justify-content: center;
   align-items: center;
   gap: 1rem;
-  margin-bottom: 3.6rem;
+  margin-bottom: 3.2rem;
 }
 
 .arrow-btn {
@@ -291,7 +297,6 @@ dialog svg {
   margin-top: -0.4rem;
   font-size: 2.2rem;
   background-color: var(--transparent-theme);
-  color: var(--white-theme);
 }
 
 .left-btn {
@@ -311,12 +316,25 @@ dialog svg {
   padding: 0.4rem;
   font-size: 2.8rem;
   background-color: var(--transparent-theme);
-  color: var(--white-theme);
+}
+
+.add-todo-btn {
+  margin-bottom: 4.6rem;
+  background-color: var(--lightblue-theme);
+  box-shadow: 0 0.6rem 0 var(--blue-shadow-theme);
+}
+
+.visible {
+  visibility: visible;
+}
+
+.hidden {
+  visibility: hidden;
 }
 
 #todo-container {
-  width: 48rem;
   list-style: none;
+  width: 48rem;
   border: 0.4rem solid var(--lightgray-theme);
   border-radius: 0.8rem;
 }
@@ -411,14 +429,12 @@ dialog svg {
 .footer {
   display: flex;
   justify-content: center;
-  align-items: center;
-  width: 100%;
 }
 
 .admin-link {
+  text-decoration: none;
   font-size: 1.6rem;
   color: var(--white-theme);
-  text-decoration: none;
 }
 
 .admin-link:hover {

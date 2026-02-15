@@ -1,68 +1,131 @@
 import './styles.css';
-import { projectController, updateForProjectController } from './project-controller';
+import { projectController } from './project-controller';
 
 import {
   todoGenerator,
-  addTodo,
   todoController,
-  updateForTodoController,
 } from './todo-controller';
 
 import { renderTodo } from './render';
 
-export function updateProjectList(title, list) {
-  let projectTitle;
-  let projectList = [];
-  let currentList = [];
-  let listIndex;
-  let initialLoading;
+const project = projectController();
+const todo = todoController();
 
-  if (!title && !list) {
-    initialLoading = true;
-  }
+const projectTitleBtn = document.querySelector('.project-title-btn');
+const cancelProjectBtn = document.querySelector('.cancel-project-btn');
+const createProjectBtn = document.querySelector('.create-project-btn');
+const cancelCreateBtn = document.querySelector('.cancel-create-btn');
+const createBtn = document.querySelector('.create-btn-for-project');
+const editProjectBtn = document.querySelector('.edit-project-btn');
+const cancelEditBtn = document.querySelector('.cancel-edit-btn-for-project');
+const editBtn = document.querySelector('.edit-btn-for-project');
+const deleteProjectBtn = document.querySelector('.delete-project-btn');
+const cancelDeleteBtn = document.querySelector('.cancel-delete-btn-for-project');
+const deleteBtn = document.querySelector('.delete-btn-for-project');
+const arrowBtns = document.querySelectorAll('.arrow-btn');
 
-  if (list) {
-    projectList = list;
+const addTodoBtn = document.querySelector('.add-todo-btn');
+const cancelAddBtn = document.querySelector('.cancel-add-btn-for-project');
+const addBtn = document.querySelector('.add-btn-for-project');
+const cancelTodoBtn = document.querySelector('.cancel-todo-btn');
+const completeTodoBtn = document.querySelector('.complete-todo-btn');
+const editTodoBtn = document.querySelector('.edit-todo-btn');
+const cancelEditBtnForTodo = document.querySelector('.cancel-edit-btn-for-todo');
+const editBtnForTodo = document.querySelector('.edit-btn-for-todo');
+const deleteTodoBtn = document.querySelector('.delete-todo-btn');
+const cancelDeleteBtnForTodo = document.querySelector('.cancel-delete-btn-for-todo');
+const deleteBtnForTodo = document.querySelector('.delete-btn-for-todo');
+
+projectTitleBtn.addEventListener('click', () => {
+  if (projectTitleBtn.textContent === 'Start Project') {
+    project.openCreateProject();
   } else {
-    projectList = project.getProjectList();
+    project.openControlProject();
   }
+});
 
-  if (title) {
-    projectTitle = title;
-  } else if (projectList[0]) {
-    projectTitle = projectList[0][0].project;
-  }
+cancelProjectBtn.addEventListener('click', project.closeControlProject);
+createProjectBtn.addEventListener('click', project.openCreateProject);
+cancelCreateBtn.addEventListener('click', project.closeCreateProject);
+createBtn.addEventListener('click', project.createProject);
+editProjectBtn.addEventListener('click', project.openEditProject);
+cancelEditBtn.addEventListener('click', project.closeEditProject);
+editBtn.addEventListener('click', project.editProject);
+deleteProjectBtn.addEventListener('click', project.openDeleteProject);
+cancelDeleteBtn.addEventListener('click', project.closeDeleteProject);
+deleteBtn.addEventListener('click', project.deleteProject);
 
-  projectList.forEach((list, i) => {
+arrowBtns.forEach((btn) => {
+  btn.addEventListener('click', (e) => project.switchProject(e.target));
+});
+
+addTodoBtn.addEventListener('click', todo.openAddTodo);
+cancelAddBtn.addEventListener('click', todo.closeAddTodo);
+
+addBtn.addEventListener('click', () => {
+  const projectList = project.getProjectList();
+  todo.addTodoToProject(projectList);
+});
+
+cancelTodoBtn.addEventListener('click', todo.closeControlTodo);
+
+completeTodoBtn.addEventListener('click', () => {
+  const projectList = project.getProjectList();
+  todo.completeTodo(projectList);
+});
+
+editTodoBtn.addEventListener('click', () => {
+  const projectList = project.getProjectList();
+  todo.openEditTodo(projectList);
+});
+
+cancelEditBtnForTodo.addEventListener('click', todo.closeEditTodo);
+
+editBtnForTodo.addEventListener('click', () => {
+  const projectList = project.getProjectList();
+  todo.editTodo(projectList);
+});
+
+deleteTodoBtn.addEventListener('click', todo.openDeleteTodo);
+cancelDeleteBtnForTodo.addEventListener('click', todo.closeDeleteTodo);
+
+deleteBtnForTodo.addEventListener('click', () => {
+  const projectList = project.getProjectList();
+  todo.deleteTodo(projectList);
+});
+
+export function updateContent(projectTitle, projectList) {
+  let currentList = [];
+
+  for (let i = 0; i < projectList.length; i++) {
+    const list = projectList[i];
+
     if (list[0].project === projectTitle) {
-      listIndex = i;
+      currentList = projectList[i];
     }
+  }
+  
+  renderTodo(projectTitle, currentList);
+  console.log(projectList);
+  const todoItems = document.querySelectorAll('.todo-item');
+
+  todoItems.forEach((item) => {
+    const projectList = project.getProjectList();
+    
+    item.addEventListener('click', (e) => {
+      todo.openControlTodo(e,projectList);
+    });
+
+    item.addEventListener('keydown', (e) => {
+      if (e.key === 'Enter') {
+        e.preventDefault();
+        todo.openControlTodo(e, projectList);
+      }
+    });
   });
 
-  if (listIndex !== undefined) {
-    currentList = projectList[listIndex];
-  }
-
-  const getProjectList = () => projectList;
-
-  console.log(projectList);
-  renderTodo(projectTitle, currentList);
-  todo.prepareOpenControlTodo(currentList);
-
-  if (initialLoading) {
-    initialLoading = false;
-  } else {
-    localStorage.setItem('projectList', JSON.stringify(projectList));
-  }
-
-  return { getProjectList };
+  localStorage.setItem('projectList', JSON.stringify(projectList));
 }
-
-const project = projectController();
-const add = addTodo();
-const todo = todoController();
-updateForProjectController();
-updateForTodoController();
 
 // some default items
 const todoOne = todoGenerator(
@@ -116,35 +179,40 @@ const todoFive = todoGenerator(
 );
 
 const storedList = JSON.parse(localStorage.getItem('projectList'));
+const projectList = project.getProjectList();
 
-if (storedList[0] !== undefined) {
-  storedList.forEach((list) => {
-    project.createProject(list[0].project);
+if (storedList.length >= 1) {
+  for (let i = 0; i < storedList.length; i++) {
+    const list = storedList[i];
+    project.createProject(projectList, list[0].project);
 
-    list.forEach((todo) => {
-      if (todo.id === 0) {
-        return;
+    for (let j = 0; j < list.length; j++) {
+      const currentTodo = list[j];
+
+      if (currentTodo.id === 0) {
+        break;
       }
+      
       const todoItem = todoGenerator(
-        todo.project,
-        todo.check,
-        todo.title,
-        todo.description,
-        todo.dueDate,
-        todo.time,
-        todo.priority,
+        currentTodo.project,
+        currentTodo.check,
+        currentTodo.title,
+        currentTodo.description,
+        currentTodo.dueDate,
+        currentTodo.time,
+        currentTodo.priority,
       );
-      add.addTodoToProject(todoItem);
-    });
-  });
+      todo.addTodoToProject(projectList, todoItem);
+    }
+  }
 } else {
-  project.createProject('Daily life');
-  add.addTodoToProject(todoOne);
-  add.addTodoToProject(todoTwo);
-  add.addTodoToProject(todoThree);
-  project.createProject('My work');
-  add.addTodoToProject(todoFour);
-  add.addTodoToProject(todoFive);
+  project.createProject(projectList, 'Daily life');
+  todo.addTodoToProject(projectList, todoOne);
+  todo.addTodoToProject(projectList, todoTwo);
+  todo.addTodoToProject(projectList, todoThree);
+  project.createProject(projectList, 'My work');
+  todo.addTodoToProject(projectList, todoFour);
+  todo.addTodoToProject(projectList, todoFive);
 }
 
-project.switchProject('', 'initialLoading');
+project.switchProject();
