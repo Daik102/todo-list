@@ -27,6 +27,10 @@ export function renderTodo(projectTitle, renderingList) {
         </li>
       `;
     }
+
+    todoContainer.classList.add('container-border');
+  } else {
+    todoContainer.classList.remove('container-border');
   }
 
   projectTitleBtn.textContent = projectTitle;

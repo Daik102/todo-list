@@ -125,7 +125,7 @@ export function todoController() {
     dialogAddTodo.showModal();
   };
 
-  const closeAddTodo = () => {
+  const closeAddTodo = (projectList) => {
     dialogAddTodo.close();
     title.value = '';
     description.value = '';
@@ -133,6 +133,11 @@ export function todoController() {
     time.value = '';
     priority.value = '';
     alertNoTodoTitle.classList.remove('visible');
+
+    if (projectList) {
+      projectTitle = projectTitleBtn.textContent;
+      updateContent(projectTitle, projectList);
+    }
   };
 
   const addTodoToProject = (projectList, todoItem) => {
@@ -238,8 +243,13 @@ export function todoController() {
     dialogControlTodo.showModal();
   };
 
-  const closeControlTodo = () => {
+  const closeControlTodo = (projectList) => {
     dialogControlTodo.close();
+
+    if (projectList) {
+      const projectTitle = projectTitleBtn.textContent;
+      updateContent(projectTitle, projectList);
+    }
   };
 
   const completeTodo = (projectList) => {
@@ -302,9 +312,14 @@ export function todoController() {
     dialogEditTodo.showModal();
   };
 
-  const closeEditTodo = () => {
+  const closeEditTodo = (projectList) => {
     dialogEditTodo.close();
     alertNoEditTitle.classList.remove('visible');
+
+    if (projectList) {
+      projectTitle = projectTitleBtn.textContent;
+      updateContent(projectTitle, projectList);
+    }
   };
 
   const editTodo = (projectList) => {
@@ -339,8 +354,13 @@ export function todoController() {
     dialogDeleteTodo.showModal();
   };
 
-  const closeDeleteTodo = () => {
+  const closeDeleteTodo = (projectList) => {
     dialogDeleteTodo.close();
+    
+    if (projectList) {
+      projectTitle = projectTitleBtn.textContent;
+      updateContent(projectTitle, projectList);
+    }
   };
 
   const deleteTodo = (projectList) => {

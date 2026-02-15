@@ -44,7 +44,10 @@ projectTitleBtn.addEventListener('click', () => {
   }
 });
 
-cancelProjectBtn.addEventListener('click', project.closeControlProject);
+cancelProjectBtn.addEventListener('click', (e) => {
+  project.closeControlProject(e);
+});
+
 createProjectBtn.addEventListener('click', project.openCreateProject);
 cancelCreateBtn.addEventListener('click', project.closeCreateProject);
 createBtn.addEventListener('click', project.createProject);
@@ -60,14 +63,20 @@ arrowBtns.forEach((btn) => {
 });
 
 addTodoBtn.addEventListener('click', todo.openAddTodo);
-cancelAddBtn.addEventListener('click', todo.closeAddTodo);
+cancelAddBtn.addEventListener('click', () => {
+  const projectList = project.getProjectList();
+  todo.closeAddTodo(projectList);
+});
 
 addBtn.addEventListener('click', () => {
   const projectList = project.getProjectList();
   todo.addTodoToProject(projectList);
 });
 
-cancelTodoBtn.addEventListener('click', todo.closeControlTodo);
+cancelTodoBtn.addEventListener('click', () => {
+  const projectList = project.getProjectList();
+  todo.closeControlTodo(projectList);
+});
 
 completeTodoBtn.addEventListener('click', () => {
   const projectList = project.getProjectList();
@@ -79,7 +88,10 @@ editTodoBtn.addEventListener('click', () => {
   todo.openEditTodo(projectList);
 });
 
-cancelEditBtnForTodo.addEventListener('click', todo.closeEditTodo);
+cancelEditBtnForTodo.addEventListener('click', () => {
+  const projectList = project.getProjectList();
+  todo.closeEditTodo(projectList);
+});
 
 editBtnForTodo.addEventListener('click', () => {
   const projectList = project.getProjectList();
@@ -87,7 +99,11 @@ editBtnForTodo.addEventListener('click', () => {
 });
 
 deleteTodoBtn.addEventListener('click', todo.openDeleteTodo);
-cancelDeleteBtnForTodo.addEventListener('click', todo.closeDeleteTodo);
+
+cancelDeleteBtnForTodo.addEventListener('click', () => {
+  const projectList = project.getProjectList();
+  todo.closeDeleteTodo(projectList);
+});
 
 deleteBtnForTodo.addEventListener('click', () => {
   const projectList = project.getProjectList();

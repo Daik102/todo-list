@@ -22,8 +22,13 @@ export function projectController() {
     dialogControlProject.showModal();
   };
 
-  const closeControlProject = () => {
+  const closeControlProject = (e) => {
     dialogControlProject.close();
+
+    if (e) {
+      projectTitle = projectTitleBtn.textContent;
+      updateContent(projectTitle, projectList);
+    }
   };
 
   const openCreateProject = () => {
@@ -36,6 +41,8 @@ export function projectController() {
     projectTitleInput.value = '';
     alertNoProjectTitle.classList.remove('visible');
     alertDuplicatedTitle.classList.remove('visible');
+    projectTitle = projectTitleBtn.textContent;
+    updateContent(projectTitle, projectList);
   };
 
   const createProject = (lists, title) => {
@@ -90,6 +97,8 @@ export function projectController() {
     editTitleInput.value = '';
     alertNoEditTitle.classList.remove('visible');
     alertDuplicatedEditTitle.classList.remove('visible');
+    projectTitle = projectTitleBtn.textContent;
+    updateContent(projectTitle, projectList);
   };
 
   const editProject = () => {
@@ -137,6 +146,8 @@ export function projectController() {
 
   const closeDeleteProject = () => {
     dialogDeleteProject.close();
+    projectTitle = projectTitleBtn.textContent;
+    updateContent(projectTitle, projectList);
   };
 
   const deleteProject = () => {
