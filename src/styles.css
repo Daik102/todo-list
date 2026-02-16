@@ -46,6 +46,7 @@ dialog {
   width: 48rem;
   margin: 21.8rem auto 0;
   border-radius: 0.8rem;
+  border: none;
   background-color: var(--super-lightblue-theme);
 }
 
@@ -67,7 +68,22 @@ dialog::backdrop {
 
 .dialog-add-todo,
 .dialog-edit-todo {
-  padding: 2.4rem;
+  padding: 2.8rem;
+}
+
+.dialog-control-project,
+.dialog-control-todo {
+  animation: falling-control 0.6s;
+}
+
+@keyframes falling-control {
+  from {
+    transform: translate(0, -48rem);
+  }
+
+  to {
+    transform: translate(0);
+  }
 }
 
 .dialog-create-project form,
@@ -197,7 +213,7 @@ dialog svg {
   display: flex;
   justify-content: center;
   width: 100%;
-  margin-top: 2.4rem;
+  margin-top: 4.8rem;
 }
 
 .btn-container {
@@ -224,9 +240,21 @@ dialog svg {
   box-shadow: 0 0.6rem 0 var(--blue-shadow-theme);
 }
 
+.create-btn:hover,
+.add-btn:hover,
+.complete-btn:hover {
+  background-color: var(--blue-shadow-theme);
+  box-shadow: 0 0.6rem 0 var(--lightblue-theme);
+}
+
 .edit-btn {
   background-color: var(--lightgreen-theme);
   box-shadow: 0 0.6rem 0 var(--green-shadow-theme);
+}
+
+.edit-btn:hover {
+  background-color: var(--green-shadow-theme);
+  box-shadow: 0 0.6rem 0 var(--lightgreen-theme);
 }
 
 .delete-btn {
@@ -234,9 +262,19 @@ dialog svg {
   box-shadow: 0 0.6rem 0 var(--pink-shadow-theme);
 }
 
+.delete-btn:hover {
+  background-color: var(--pink-shadow-theme);
+  box-shadow: 0 0.6rem 0 var(--pink-theme);
+}
+
 .cancel-btn {
   background-color: var(--lightgray-theme);
   box-shadow: 0 0.6rem 0 var(--shadow-theme);
+}
+
+.cancel-btn:hover {
+  background-color: var(--shadow-theme);
+  box-shadow: 0 0.6rem 0 var(--lightgray-theme);
 }
 
 .alert {
@@ -317,7 +355,7 @@ dialog svg {
 
 .arrow-btn:hover,
 .project-title-btn:hover {
-  opacity: 0.8;
+  color: var(--lightblue-theme);
 }
 
 .project-title-btn {
@@ -330,6 +368,11 @@ dialog svg {
   margin-bottom: 4.6rem;
   background-color: var(--lightblue-theme);
   box-shadow: 0 0.6rem 0 var(--blue-shadow-theme);
+}
+
+.add-todo-btn:hover {
+  background-color: var(--blue-shadow-theme);
+  box-shadow: 0 0.6rem 0 var(--lightblue-theme);
 }
 
 .visible {
@@ -356,7 +399,6 @@ dialog svg {
   border-bottom: 0.2rem dashed var(--lightgray-theme);
   background-color: var(--white-theme);
   cursor: pointer;
-  animation: slide-todo 0.4s;
   transition: opacity 0.15s;
 }
 

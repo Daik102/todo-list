@@ -11,7 +11,7 @@ export function renderTodo(projectTitle, renderingList) {
       if (todo.dueDate) {
         margin = 'todo-due-date-margin';
       }
-
+      
       todoHTML += `
         <li class="todo-item" data-id="${todo.id}" tabindex="0">
           <div class="todo-title-row">
@@ -35,4 +35,11 @@ export function renderTodo(projectTitle, renderingList) {
 
   projectTitleBtn.textContent = projectTitle;
   todoContainer.innerHTML = todoHTML;
+
+  const todoItems = document.querySelectorAll('.todo-item');
+
+  todoItems.forEach((item, i) => {
+    const duration = i * 0.15 + 0.6;
+    item.style.animation = `slide-todo ${duration}s`;
+  });
 }

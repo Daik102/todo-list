@@ -104,6 +104,7 @@ export function todoController() {
   const priority = document.getElementById('priority');
   const alertNoTodoTitle = document.querySelector('.alert-no-todo-title');
   const projectTitleBtn = document.querySelector('.project-title-btn');
+  const completeTodoBtn = document.querySelector('.complete-todo-btn');
   const dialogControlTodo = document.querySelector('.dialog-control-todo');
   const dialogEditTodo = document.querySelector('.dialog-edit-todo');
   const dialogDeleteTodo = document.querySelector('.dialog-delete-todo');
@@ -235,6 +236,12 @@ export function todoController() {
               todoDescription.classList.remove('no-todo-description');
               todoDescription.textContent = todo.description;
             }
+
+            if (todo.check === 'unchecked') {
+              completeTodoBtn.textContent = 'Complete!';
+            } else {
+              completeTodoBtn.textContent = 'Undo';
+            }
           }
         }
       }
@@ -356,7 +363,7 @@ export function todoController() {
 
   const closeDeleteTodo = (projectList) => {
     dialogDeleteTodo.close();
-    
+
     if (projectList) {
       projectTitle = projectTitleBtn.textContent;
       updateContent(projectTitle, projectList);
