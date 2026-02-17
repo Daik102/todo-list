@@ -191,7 +191,7 @@ export function projectController() {
         const list = projectList[i];
 
         if (list[0].project === projectTitle) {
-          if (arrowBtn.classList.contains('left-btn')) {
+          if (arrowBtn === 'left-btn' || arrowBtn === 'ArrowLeft') {
             listIndex = i - 1;
 
             if (listIndex < 0) {
@@ -208,6 +208,17 @@ export function projectController() {
       }
 
       projectTitle = projectList[listIndex][0].project;
+
+      if (arrowBtn === 'ArrowLeft' || arrowBtn === 'ArrowRight' || arrowBtn === 'ArrowUp' || arrowBtn === 'ArrowDown') {
+        const leftBtn = document.querySelector('.left-btn');
+        const rightBtn = document.querySelector('.right-btn');
+
+        if (arrowBtn === 'ArrowLeft' || arrowBtn === 'ArrowUp') {
+          leftBtn.focus();
+        } else {
+          rightBtn.focus();
+        }
+      }
     }
 
     updateContent(projectTitle, projectList);
