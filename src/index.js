@@ -1,16 +1,11 @@
 import './styles.css';
 import { projectController } from './project-controller';
-
-import {
-  todoGenerator,
-  todoController,
-} from './todo-controller';
-
+import { todoGenerator, todoController } from './todo-controller';
 import { renderTodo } from './render';
 
 const project = projectController();
 const todo = todoController();
-
+// For project-controller.
 const projectTitleBtn = document.querySelector('.project-title-btn');
 const cancelProjectBtn = document.querySelector('.cancel-project-btn');
 const createProjectBtn = document.querySelector('.create-project-btn');
@@ -23,7 +18,7 @@ const deleteProjectBtn = document.querySelector('.delete-project-btn');
 const cancelDeleteBtn = document.querySelector('.cancel-delete-btn-for-project');
 const deleteBtn = document.querySelector('.delete-btn-for-project');
 const arrowBtns = document.querySelectorAll('.arrow-btn');
-
+// For todo-controller.
 const addTodoBtn = document.querySelector('.add-todo-btn');
 const cancelAddBtn = document.querySelector('.cancel-add-btn-for-project');
 const addBtn = document.querySelector('.add-btn-for-project');
@@ -35,11 +30,11 @@ const editBtnForTodo = document.querySelector('.edit-btn-for-todo');
 const deleteTodoBtn = document.querySelector('.delete-todo-btn');
 const cancelDeleteBtnForTodo = document.querySelector('.cancel-delete-btn-for-todo');
 const deleteBtnForTodo = document.querySelector('.delete-btn-for-todo');
-
+// For keyboard support.
 const leftBtn = document.querySelector('.left-btn');
 const rightBtn = document.querySelector('.right-btn');
-const btnContainerForControlProject = document.querySelector('.btn-container-for-control-project');
-const btnContainerForControlTodo = document.querySelector('.btn-container-for-control-todo');
+const btnContainerForProject = document.querySelector('.btn-container-for-control-project');
+const btnContainerForTodo = document.querySelector('.btn-container-for-control-todo');
 const projectTitleInput = document.getElementById('project-title');
 const editTitleInput = document.getElementById('edit-project-title');
 const dueDate = document.getElementById('due-date');
@@ -61,18 +56,15 @@ projectTitleBtn.addEventListener('click', () => {
   }
 });
 
-cancelProjectBtn.addEventListener('click', (e) => {
-  project.closeControlProject(e);
-});
-
+cancelProjectBtn.addEventListener('click', (e) => project.closeControlProject(e));
 createProjectBtn.addEventListener('click', project.openCreateProject);
-cancelCreateBtn.addEventListener('click', project.closeCreateProject);
+cancelCreateBtn.addEventListener('click', (e) => project.closeCreateProject(e));
 createBtn.addEventListener('click', project.createProject);
 editProjectBtn.addEventListener('click', project.openEditProject);
-cancelEditBtn.addEventListener('click', project.closeEditProject);
+cancelEditBtn.addEventListener('click', (e) => project.closeEditProject(e));
 editBtn.addEventListener('click', project.editProject);
 deleteProjectBtn.addEventListener('click', project.openDeleteProject);
-cancelDeleteBtn.addEventListener('click', project.closeDeleteProject);
+cancelDeleteBtn.addEventListener('click', (e) => project.closeDeleteProject(e));
 deleteBtn.addEventListener('click', project.deleteProject);
 
 arrowBtns.forEach((btn) => {
@@ -128,464 +120,122 @@ deleteBtnForTodo.addEventListener('click', () => {
   todo.deleteTodo(projectList);
 });
 
-projectTitleBtn.addEventListener('keydown', (e) => {
-  if (e.key === 'ArrowLeft' || e.key === 'ArrowRight') {
-    project.switchProject(e.key);
-  } else if (e.key === 'ArrowUp') {
-    adminLink.focus();
-  } else if (e.key === 'ArrowDown') {
-    addTodoBtn.focus();
-  }
-});
-
-leftBtn.addEventListener('keydown', (e) => {
-  if (e.key === 'ArrowLeft') {
-    project.switchProject(e.key);
-  } else if (e.key === 'ArrowRight') {
-    projectTitleBtn.focus();
-  } else if (e.key === 'ArrowUp') {
-    adminLink.focus();
-  } else if (e.key === 'ArrowDown') {
-    addTodoBtn.focus();
-  }
-});
-
-rightBtn.addEventListener('keydown', (e) => {
-  if (e.key === 'ArrowLeft') {
-    projectTitleBtn.focus();
-  } else if (e.key === 'ArrowRight') {
-    project.switchProject(e.key);
-  } else if (e.key === 'ArrowUp') {
-    adminLink.focus();
-  } else if (e.key === 'ArrowDown') {
-    addTodoBtn.focus();
-  }
-});
-
-btnContainerForControlProject.addEventListener('keydown', (e) => {
-  const btns = document.querySelectorAll('.btn-for-control-project');
-  const activeElement = document.activeElement;
-  const currentIndex = Array.from(btns).indexOf(activeElement);
-  
-  if (e.key === 'ArrowDown' || e.key === 'ArrowRight') {
-    if (currentIndex < btns.length - 1) {
-      btns[currentIndex + 1].focus();
-    } else {
-      btns[0].focus();
-    }
-  } else if (e.key === 'ArrowUp' || e.key === 'ArrowLeft') {
-    if (currentIndex > 0) {
-      btns[currentIndex - 1].focus();
-    } else {
-      btns[btns.length - 1].focus();
-    }
-  }
-});
-
-projectTitleInput.addEventListener('keydown', (e) => {
-  if (e.key === 'ArrowUp' || e.key === 'ArrowRight') {
-    createBtn.focus();
-  } else if (e.key === 'ArrowDown' || e.key === 'ArrowLeft') {
-    cancelCreateBtn.focus();
-  } else if (e.key === 'Enter') {
-    e.preventDefault();
-    project.createProject();
-  }
-});
-
-cancelCreateBtn.addEventListener('keydown', (e) => {
-  if (e.key === 'ArrowUp' || e.key === 'ArrowDown') {
-    projectTitleInput.focus();
-  } else if (e.key === 'ArrowLeft' || e.key === 'ArrowRight') {
-    createBtn.focus();
-  }
-});
-
-createBtn.addEventListener('keydown', (e) => {
-  if (e.key === 'ArrowUp' || e.key === 'ArrowDown') {
-    projectTitleInput.focus();
-  } else if (e.key === 'ArrowLeft' || e.key === 'ArrowRight') {
-    cancelCreateBtn.focus();
-  }
-});
-
-editTitleInput.addEventListener('keydown', (e) => {
-  if (e.key === 'ArrowUp' || e.key === 'ArrowRight') {
-    editBtn.focus();
-  } else if (e.key === 'ArrowDown' || e.key === 'ArrowLeft') {
-    cancelEditBtn.focus();
-  } else if (e.key === 'Enter') {
-    e.preventDefault();
-    project.editProject();
-  }
-});
-
-cancelEditBtn.addEventListener('keydown', (e) => {
-  if (e.key === 'ArrowUp' || e.key === 'ArrowDown') {
-    editTitleInput.focus();
-  } else if (e.key === 'ArrowLeft' || e.key === 'ArrowRight') {
-    editBtn.focus();
-  }
-});
-
-editBtn.addEventListener('keydown', (e) => {
-  if (e.key === 'ArrowUp' || e.key === 'ArrowDown') {
-    editTitleInput.focus();
-  } else if (e.key === 'ArrowLeft' || e.key === 'ArrowRight') {
-    cancelEditBtn.focus();
-  }
-});
-
-cancelDeleteBtn.addEventListener('keydown', (e) => {
-  if (e.key === 'ArrowUp' || e.key === 'ArrowDown' || e.key === 'ArrowLeft' || e.key === 'ArrowRight') {
-    deleteBtn.focus();
-  }
-});
-
-deleteBtn.addEventListener('keydown', (e) => {
-  if (e.key === 'ArrowUp' || e.key === 'ArrowDown' || e.key === 'ArrowLeft' || e.key === 'ArrowRight') {
-    cancelDeleteBtn.focus();
-  }
-});
-
-addTodoBtn.addEventListener('keydown', (e) => {
-  if (e.key === 'ArrowUp' || e.key === 'ArrowLeft') {
-    projectTitleBtn.focus();
-  } else if (e.key === 'ArrowDown' || e.key === 'ArrowRight') {
-    const firstItem = document.querySelector('.todo-item');
-    firstItem.focus();
-  }
-});
+projectTitleBtn.addEventListener('keydown', (e) => project.handleArrowKey('projectTitleBtn', e));
+leftBtn.addEventListener('keydown', (e) => project.handleArrowKey('leftBtn', e));
+rightBtn.addEventListener('keydown', (e) => project.handleArrowKey('rightBtn', e));
+btnContainerForProject.addEventListener('keydown', (e) => project.handleArrowKey('btnContainerForProject', e));
+projectTitleInput.addEventListener('keydown', (e) => project.handleArrowKey('projectTitleInput', e));
+cancelCreateBtn.addEventListener('keydown', (e) => project.handleArrowKey('cancelCreateBtn', e));
+createBtn.addEventListener('keydown', (e) => project.handleArrowKey('createBtn', e));
+editTitleInput.addEventListener('keydown', (e) => project.handleArrowKey('editTitleInput', e));
+cancelEditBtn.addEventListener('keydown', (e) => project.handleArrowKey('cancelEditBtn', e));
+editBtn.addEventListener('keydown', (e) => project.handleArrowKey('editBtn', e));
+cancelDeleteBtn.addEventListener('keydown', (e) => project.handleArrowKey('cancelDeleteBtn', e));
+deleteBtn.addEventListener('keydown', (e) => project.handleArrowKey('deleteBtn', e));
+addTodoBtn.addEventListener('keydown', (e) => todo.handleArrowKey('addTodoBtn', e));
 
 title.addEventListener('keydown', (e) => {
-  if (e.key === 'ArrowUp' || e.key === 'ArrowLeft') {
-    addBtn.focus();
-  } else if (e.key === 'ArrowDown' || e.key === 'ArrowRight') {
-    description.focus();
-  } else if (e.key === 'Enter') {
-    e.preventDefault();
-    const projectList = project.getProjectList();
-    todo.addTodoToProject(projectList);
-  }
+  const projectList = project.getProjectList();
+  todo.handleArrowKey('title', e, projectList)
 });
 
-description.addEventListener('keydown', (e) => {
-  if (e.key === 'ArrowUp' || e.key === 'ArrowLeft') {
-    title.focus();
-  } else if (e.key === 'ArrowDown' || e.key === 'ArrowRight') {
-    dueDate.focus();
-    dueDate.showPicker();
-  }
-});
-
-dueDate.addEventListener('keydown', (e) => {
-  if (e.key === 'ArrowUp' || e.key === 'ArrowDown' || e.key === 'ArrowLeft' || e.key === 'ArrowRight') {
-    e.preventDefault();
-
-    if (e.key === 'ArrowUp' || e.key === 'ArrowLeft') {
-      description.focus();
-    } else {
-      time.focus();
-      time.showPicker();
-    }
-  }
-});
-
-time.addEventListener('keydown', (e) => {
-  if (e.key === 'ArrowUp' || e.key === 'ArrowDown' || e.key === 'ArrowLeft' || e.key === 'ArrowRight') {
-    e.preventDefault();
-
-    if (e.key === 'ArrowUp' || e.key === 'ArrowLeft') {
-      dueDate.focus();
-      dueDate.showPicker();
-    } else {
-      priority.focus();
-      priority.showPicker();
-    }
-  }
-});
-
-priority.addEventListener('keydown', (e) => {
-  if (e.key === 'ArrowUp' || e.key === 'ArrowDown' || e.key === 'ArrowLeft' || e.key === 'ArrowRight') {
-    e.preventDefault();
-
-    if (e.key === 'ArrowUp' || e.key === 'ArrowLeft') {
-      time.focus();
-      time.showPicker();
-    } else {
-      cancelAddBtn.focus();
-    }
-  }
-});
-
-cancelAddBtn.addEventListener('keydown', (e) => {
-  if (e.key === 'ArrowUp' || e.key === 'ArrowLeft') {
-    priority.focus();
-    priority.showPicker();
-  } else if (e.key === 'ArrowDown' || e.key === 'ArrowRight') {
-    addBtn.focus();
-  }
-});
-
-addBtn.addEventListener('keydown', (e) => {
-  if (e.key === 'ArrowUp' || e.key === 'ArrowLeft') {
-    cancelAddBtn.focus();
-  } else if (e.key === 'ArrowDown' || e.key === 'ArrowRight') {
-    title.focus();
-  }
-});
-
-todoContainer.addEventListener('keydown', (e) => {
-  const todoItems = document.querySelectorAll('.todo-item');
-  const activeElement = document.activeElement;
-  const currentIndex = Array.from(todoItems).indexOf(activeElement);
-  
-  if (e.key === 'ArrowDown' || e.key === 'ArrowRight') {
-    if (currentIndex < todoItems.length - 1) {
-      todoItems[currentIndex + 1].focus();
-    } else {
-      adminLink.focus();
-    }
-  } else if (e.key === 'ArrowUp' || e.key === 'ArrowLeft') {
-    if (currentIndex > 0) {
-      todoItems[currentIndex - 1].focus();
-    } else {
-      addTodoBtn.focus();
-    }
-  }
-});
-
-adminLink.addEventListener('keydown', (e) => {
-  if (e.key === 'ArrowUp' || e.key === 'ArrowLeft') {
-    const todoItems = document.querySelectorAll('.todo-item');
-    todoItems[todoItems.length - 1].focus();
-  } else if (e.key === 'ArrowDown' || e.key === 'ArrowRight') {
-    projectTitleBtn.focus();
-  }
-});
-
-btnContainerForControlTodo.addEventListener('keydown', (e) => {
-  const btns = document.querySelectorAll('.btn-for-control-todo');
-  const activeElement = document.activeElement;
-  const currentIndex = Array.from(btns).indexOf(activeElement);
-  
-  if (e.key === 'ArrowDown' || e.key === 'ArrowRight') {
-    if (currentIndex < btns.length - 1) {
-      btns[currentIndex + 1].focus(); 
-    } else {
-      btns[0].focus();
-    }
-  } else if (e.key === 'ArrowUp' || e.key === 'ArrowLeft') {
-    if (currentIndex > 0) {
-      btns[currentIndex - 1].focus();
-    } else {
-      btns[btns.length - 1].focus();
-    }
-  }
-});
+description.addEventListener('keydown', (e) => todo.handleArrowKey('description', e));
+dueDate.addEventListener('keydown', (e) => todo.handleArrowKey('dueDate', e));
+time.addEventListener('keydown', (e) => todo.handleArrowKey('time', e));
+priority.addEventListener('keydown', (e) => todo.handleArrowKey('priority', e));
+cancelAddBtn.addEventListener('keydown', (e) => todo.handleArrowKey('cancelAddBtn', e));
+addBtn.addEventListener('keydown', (e) => todo.handleArrowKey('addBtn', e));
+todoContainer.addEventListener('keydown', (e) => todo.handleArrowKey('todoContainer', e));
+adminLink.addEventListener('keydown', (e) => todo.handleArrowKey('adminLink', e));
+btnContainerForTodo.addEventListener('keydown', (e) => todo.handleArrowKey('btnContainerForTodo', e));
 
 titleForEdit.addEventListener('keydown', (e) => {
-  if (e.key === 'ArrowUp' || e.key === 'ArrowLeft') {
-    editBtnForTodo.focus();
-  } else if (e.key === 'ArrowDown' || e.key === 'ArrowRight') {
-    descriptionForEdit.focus();
-  } else if (e.key === 'Enter') {
-    e.preventDefault();
-    const projectList = project.getProjectList();
-    todo.editTodo(projectList);
-  }
+  const projectList = project.getProjectList();
+  todo.handleArrowKey('titleForEdit', e, projectList);
 });
 
-descriptionForEdit.addEventListener('keydown', (e) => {
-  if (e.key === 'ArrowUp' || e.key === 'ArrowLeft') {
-    titleForEdit.focus();
-  } else if (e.key === 'ArrowDown' || e.key === 'ArrowRight') {
-    dueDateForEdit.focus();
-    dueDateForEdit.showPicker();
-  }
-});
-
-dueDateForEdit.addEventListener('keydown', (e) => {
-  if (e.key === 'ArrowUp' || e.key === 'ArrowDown' || e.key === 'ArrowLeft' || e.key === 'ArrowRight') {
-    e.preventDefault();
-
-    if (e.key === 'ArrowUp' || e.key === 'ArrowLeft') {
-      descriptionForEdit.focus();
-    } else {
-      timeForEdit.focus();
-      timeForEdit.showPicker();
-    }
-  }
-});
-
-timeForEdit.addEventListener('keydown', (e) => {
-  if (e.key === 'ArrowUp' || e.key === 'ArrowDown' || e.key === 'ArrowLeft' || e.key === 'ArrowRight') {
-    e.preventDefault();
-
-    if (e.key === 'ArrowUp' || e.key === 'ArrowLeft') {
-      dueDateForEdit.focus();
-      dueDateForEdit.showPicker();
-    } else {
-      priorityForEdit.focus();
-      priorityForEdit.showPicker();
-    }
-  }
-});
-
-priorityForEdit.addEventListener('keydown', (e) => {
-  if (e.key === 'ArrowUp' || e.key === 'ArrowDown' || e.key === 'ArrowLeft' || e.key === 'ArrowRight') {
-    e.preventDefault();
-
-    if (e.key === 'ArrowUp' || e.key === 'ArrowLeft') {
-      timeForEdit.focus();
-      timeForEdit.showPicker();
-    } else {
-      cancelEditBtnForTodo.focus();
-    }
-  }
-});
-
-cancelEditBtnForTodo.addEventListener('keydown', (e) => {
-  if (e.key === 'ArrowUp' || e.key === 'ArrowLeft') {
-    priorityForEdit.focus();
-    priorityForEdit.showPicker();
-  } else if (e.key === 'ArrowDown' || e.key === 'ArrowRight') {
-    editBtnForTodo.focus();
-  }
-});
-
-editBtnForTodo.addEventListener('keydown', (e) => {
-  if (e.key === 'ArrowUp' || e.key === 'ArrowLeft') {
-    cancelEditBtnForTodo.focus();
-  } else if (e.key === 'ArrowDown' || e.key === 'ArrowRight') {
-    titleForEdit.focus();
-  }
-});
-
-cancelDeleteBtnForTodo.addEventListener('keydown', (e) => {
-  if (e.key === 'ArrowUp' || e.key === 'ArrowDown' || e.key === 'ArrowLeft' || e.key === 'ArrowRight') {
-    deleteBtnForTodo.focus();
-  }
-});
-
-deleteBtnForTodo.addEventListener('keydown', (e) => {
-  if (e.key === 'ArrowUp' || e.key === 'ArrowDown' || e.key === 'ArrowLeft' || e.key === 'ArrowRight') {
-    cancelDeleteBtnForTodo.focus();
-  }
-});
+descriptionForEdit.addEventListener('keydown', (e) => todo.handleArrowKey('descriptionForEdit', e));
+dueDateForEdit.addEventListener('keydown', (e) => todo.handleArrowKey('dueDateForEdit', e));
+timeForEdit.addEventListener('keydown', (e) => todo.handleArrowKey('timeForEdit', e));
+priorityForEdit.addEventListener('keydown', (e) => todo.handleArrowKey('priorityForEdit', e));
+cancelEditBtnForTodo.addEventListener('keydown', (e) => todo.handleArrowKey('cancelEditBtnForTodo', e));
+editBtnForTodo.addEventListener('keydown', (e) => todo.handleArrowKey('editBtnForTodo', e));
+cancelDeleteBtnForTodo.addEventListener('keydown', (e) => todo.handleArrowKey('cancelDeleteBtnForTodo', e));
+deleteBtnForTodo.addEventListener('keydown', (e) => todo.handleArrowKey('deleteBtnForTodo', e));
 
 export function updateContent(projectTitle, projectList) {
-  let currentList = [];
-
-  for (let i = 0; i < projectList.length; i++) {
-    const list = projectList[i];
-
-    if (list[0].project === projectTitle) {
-      currentList = projectList[i];
-    }
-  }
+  renderTodo(projectTitle, projectList);
   
-  renderTodo(projectTitle, currentList);
-  console.log(projectList);
   const todoItems = document.querySelectorAll('.todo-item');
 
   todoItems.forEach((item) => {
-    const projectList = project.getProjectList();
-    
     item.addEventListener('click', (e) => {
-      todo.openControlTodo(e,projectList);
+      todo.openControlTodo(e.target, projectList);
     });
 
     item.addEventListener('keydown', (e) => {
       if (e.key === 'Enter') {
         e.preventDefault();
-        todo.openControlTodo(e, projectList);
+        todo.openControlTodo(e.target, projectList);
       }
     });
   });
 
-  localStorage.setItem('projectList', JSON.stringify(projectList));
+  project.saveProjectList(projectList);
 }
+// For initial loading.
+const projectList = JSON.parse(localStorage.getItem('projectList')) || project.getProjectList();
 
-// some default items
-const todoOne = todoGenerator(
-  'Daily life',
-  'unchecked',
-  'Clean the rooms',
-  'Clean the living room and the bathroom.',
-  'Sat 08-02-2025',
-  '10:30 am',
-  'medium',
-);
-
-const todoTwo = todoGenerator(
-  'Daily life',
-  'unchecked',
-  'Buy foods',
-  'Go to XYZ store and get eggs, rice and vegetables.',
-  'Sun 08-03-2025',
-  '5:30 pm',
-  'high',
-);
-
-const todoThree = todoGenerator(
-  'Daily life',
-  'unchecked',
-  'Watch videos',
-  'Watch some English videos on YouTube to brush up my listening skill.',
-  'Sun 08-03-2025',
-  '9:00 pm',
-  'low',
-);
-
-const todoFour = todoGenerator(
-  'My work',
-  'unchecked',
-  'Attend the meeting',
-  'Attend the team meeting and discuss about the progress of the project.',
-  'Mon 08-04-2025',
-  '1:30 pm',
-  'medium',
-);
-
-const todoFive = todoGenerator(
-  'My work',
-  'unchecked',
-  'Complete the project',
-  'Finish styling the page and fix some minor bugs.',
-  'Tue 08-05-2025',
-  '5:00 pm',
-  'high',
-);
-
-const storedList = JSON.parse(localStorage.getItem('projectList'));
-const projectList = project.getProjectList();
-
-if (storedList.length >= 1) {
-  for (let i = 0; i < storedList.length; i++) {
-    const list = storedList[i];
-    project.createProject(projectList, list[0].project);
-
-    for (let j = 0; j < list.length; j++) {
-      const currentTodo = list[j];
-
-      if (currentTodo.id === 0) {
-        break;
-      }
-      
-      const todoItem = todoGenerator(
-        currentTodo.project,
-        currentTodo.check,
-        currentTodo.title,
-        currentTodo.description,
-        currentTodo.dueDate,
-        currentTodo.time,
-        currentTodo.priority,
-      );
-      todo.addTodoToProject(projectList, todoItem);
-    }
-  }
+if (projectList.length >= 1) {
+  project.updateProjectList(projectList);
 } else {
+  // Some default items.
+  const todoOne = todoGenerator(
+    'Daily life',
+    'unchecked',
+    'Clean the rooms',
+    'Clean the living room and the bathroom.',
+    'Sat 08-02-2025',
+    '10:30 am',
+    'medium',
+  );
+  const todoTwo = todoGenerator(
+    'Daily life',
+    'unchecked',
+    'Buy foods',
+    'Go to XYZ store and get eggs, rice and vegetables.',
+    'Sun 08-03-2025',
+    '5:30 pm',
+    'high',
+  );
+  const todoThree = todoGenerator(
+    'Daily life',
+    'unchecked',
+    'Watch videos',
+    'Watch some English videos on YouTube to brush up my listening skill.',
+    'Sun 08-03-2025',
+    '9:00 pm',
+    'low',
+  );
+  const todoFour = todoGenerator(
+    'My work',
+    'unchecked',
+    'Attend the meeting',
+    'Attend the team meeting and discuss about the progress of the project.',
+    'Mon 08-04-2025',
+    '1:30 pm',
+    'medium',
+  );
+  const todoFive = todoGenerator(
+    'My work',
+    'unchecked',
+    'Complete the project',
+    'Finish styling the page and fix some minor bugs.',
+    'Tue 08-05-2025',
+    '5:00 pm',
+    'high',
+  );
+
   project.createProject(projectList, 'Daily life');
   todo.addTodoToProject(projectList, todoOne);
   todo.addTodoToProject(projectList, todoTwo);
@@ -593,6 +243,5 @@ if (storedList.length >= 1) {
   project.createProject(projectList, 'My work');
   todo.addTodoToProject(projectList, todoFour);
   todo.addTodoToProject(projectList, todoFive);
+  project.switchProject();
 }
-
-project.switchProject();

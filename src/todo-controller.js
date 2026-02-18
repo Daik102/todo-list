@@ -115,6 +115,15 @@ export function todoController() {
   const timeForEdit = document.getElementById('time-for-edit');
   const priorityForEdit = document.getElementById('priority-for-edit');
   const todoDescription = document.querySelector('.todo-description');
+  // For keyboard support.
+  const cancelAddBtn = document.querySelector('.cancel-add-btn-for-project');
+  const addBtn = document.querySelector('.add-btn-for-project');
+  const addTodoBtn = document.querySelector('.add-todo-btn');
+  const adminLink = document.querySelector('.admin-link');
+  const cancelEditBtnForTodo = document.querySelector('.cancel-edit-btn-for-todo');
+  const editBtnForTodo = document.querySelector('.edit-btn-for-todo');
+  const cancelDeleteBtnForTodo = document.querySelector('.cancel-delete-btn-for-todo');
+  const deleteBtnForTodo = document.querySelector('.delete-btn-for-todo');
 
   let projectTitle = '';
   let listIndex = 0;
@@ -176,7 +185,7 @@ export function todoController() {
         listIndex = i;
       }
     }
-
+    console.log(projectList);
     if (projectList[listIndex][0].id === 0) {
       projectList[listIndex] = [];
     }
@@ -192,31 +201,31 @@ export function todoController() {
     closeAddTodo();
   };
 
-  const openControlTodo = (e, projectList) => {
-    if (e.target.classList.contains('todo-item')) {
-      id = e.target.dataset.id;
-      checkMark = e.target.children[0].children[0];
-    } else if (e.target.classList.contains('todo-title-row')) {
-      id = e.target.parentElement.dataset.id;
-      checkMark = e.target.children[0];
-    } else if (e.target.classList.contains('check-mark-svg')) {
-      id = e.target.parentElement.parentElement.parentElement.dataset.id;
-      checkMark = e.target.parentElement;
-    } else if (e.target.classList.contains('todo-title')) {
-      id = e.target.parentElement.parentElement.dataset.id;
-      checkMark = e.target.previousElementSibling;
-    } else if (e.target.classList.contains('todo-due-date-container')) {
-      id = e.target.parentElement.dataset.id;
-      checkMark = e.target.previousElementSibling.children[0];
+  const openControlTodo = (target, projectList) => {
+    if (target.classList.contains('todo-item')) {
+      id = target.dataset.id;
+      checkMark = target.children[0].children[0];
+    } else if (target.classList.contains('todo-title-row')) {
+      id = target.parentElement.dataset.id;
+      checkMark = target.children[0];
+    } else if (target.classList.contains('check-mark-svg')) {
+      id = target.parentElement.parentElement.parentElement.dataset.id;
+      checkMark = target.parentElement;
+    } else if (target.classList.contains('todo-title')) {
+      id = target.parentElement.parentElement.dataset.id;
+      checkMark = target.previousElementSibling;
+    } else if (target.classList.contains('todo-due-date-container')) {
+      id = target.parentElement.dataset.id;
+      checkMark = target.previousElementSibling.children[0];
     } else if (
-      e.target.classList.contains('todo-due-date') ||
-      e.target.classList.contains('todo-time')
+      target.classList.contains('todo-due-date') ||
+      target.classList.contains('todo-time')
     ) {
-      id = e.target.parentElement.parentElement.dataset.id;
-      checkMark = e.target.parentElement.previousElementSibling.children[0];
+      id = target.parentElement.parentElement.dataset.id;
+      checkMark = target.parentElement.previousElementSibling.children[0];
     } else {
-      id = e.target.parentElement.parentElement.parentElement.parentElement.dataset.id;
-      checkMark = e.target.parentElement.parentElement;
+      id = target.parentElement.parentElement.parentElement.parentElement.dataset.id;
+      checkMark = target.parentElement.parentElement;
     }
 
     projectTitle = projectTitleBtn.textContent;
@@ -396,6 +405,194 @@ export function todoController() {
     closeDeleteTodo();
   };
 
+  const handleArrowKey = (element, e, projectList) => {
+    if (element === 'addTodoBtn') {
+      if (e.key === 'ArrowUp' || e.key === 'ArrowLeft') {
+        projectTitleBtn.focus();
+      } else if (e.key === 'ArrowDown' || e.key === 'ArrowRight') {
+        const firstItem = document.querySelector('.todo-item');
+        firstItem.focus();
+      }
+    } else if (element === 'title') {
+      if (e.key === 'ArrowUp' || e.key === 'ArrowLeft') {
+        addBtn.focus();
+      } else if (e.key === 'ArrowDown' || e.key === 'ArrowRight') {
+        description.focus();
+      } else if (e.key === 'Enter') {
+        e.preventDefault();
+        addTodoToProject(projectList);
+      }
+    } else if (element === 'description') {
+      if (e.key === 'ArrowUp' || e.key === 'ArrowLeft') {
+        title.focus();
+      } else if (e.key === 'ArrowDown' || e.key === 'ArrowRight') {
+        dueDate.focus();
+        dueDate.showPicker();
+      }
+    } else if (element === 'dueDate') {
+      if (e.key === 'ArrowUp' || e.key === 'ArrowDown' || e.key === 'ArrowLeft' || e.key === 'ArrowRight') {
+        e.preventDefault();
+
+        if (e.key === 'ArrowUp' || e.key === 'ArrowLeft') {
+          description.focus();
+        } else {
+          time.focus();
+          time.showPicker();
+        }
+      }
+    } else if (element === 'time') {
+      if (e.key === 'ArrowUp' || e.key === 'ArrowDown' || e.key === 'ArrowLeft' || e.key === 'ArrowRight') {
+        e.preventDefault();
+
+        if (e.key === 'ArrowUp' || e.key === 'ArrowLeft') {
+          dueDate.focus();
+          dueDate.showPicker();
+        } else {
+          priority.focus();
+          priority.showPicker();
+        }
+      }
+    } else if (element === 'priority') {
+      if (e.key === 'ArrowUp' || e.key === 'ArrowDown' || e.key === 'ArrowLeft' || e.key === 'ArrowRight') {
+        e.preventDefault();
+
+        if (e.key === 'ArrowUp' || e.key === 'ArrowLeft') {
+          time.focus();
+          time.showPicker();
+        } else {
+          cancelAddBtn.focus();
+        }
+      }
+    } else if (element === 'cancelAddBtn') {
+      if (e.key === 'ArrowUp' || e.key === 'ArrowLeft') {
+        priority.focus();
+        priority.showPicker();
+      } else if (e.key === 'ArrowDown' || e.key === 'ArrowRight') {
+        addBtn.focus();
+      }
+    } else if (element === 'addBtn') {
+      if (e.key === 'ArrowUp' || e.key === 'ArrowLeft') {
+        cancelAddBtn.focus();
+      } else if (e.key === 'ArrowDown' || e.key === 'ArrowRight') {
+        title.focus();
+      }
+    } else if (element === 'todoContainer') {
+      const todoItems = document.querySelectorAll('.todo-item');
+      const activeElement = document.activeElement;
+      const currentIndex = Array.from(todoItems).indexOf(activeElement);
+      
+      if (e.key === 'ArrowDown' || e.key === 'ArrowRight') {
+        if (currentIndex < todoItems.length - 1) {
+          todoItems[currentIndex + 1].focus();
+        } else {
+          adminLink.focus();
+        }
+      } else if (e.key === 'ArrowUp' || e.key === 'ArrowLeft') {
+        if (currentIndex > 0) {
+          todoItems[currentIndex - 1].focus();
+        } else {
+          addTodoBtn.focus();
+        }
+      }
+    } else if (element === 'adminLink') {
+      if (e.key === 'ArrowUp' || e.key === 'ArrowLeft') {
+        const todoItems = document.querySelectorAll('.todo-item');
+        todoItems[todoItems.length - 1].focus();
+      } else if (e.key === 'ArrowDown' || e.key === 'ArrowRight') {
+        projectTitleBtn.focus();
+      }
+    } else if (element === 'btnContainerForTodo') {
+      const btns = document.querySelectorAll('.btn-for-control-todo');
+      const activeElement = document.activeElement;
+      const currentIndex = Array.from(btns).indexOf(activeElement);
+      
+      if (e.key === 'ArrowDown' || e.key === 'ArrowRight') {
+        if (currentIndex < btns.length - 1) {
+          btns[currentIndex + 1].focus();
+        } else {
+          btns[0].focus();
+        }
+      } else if (e.key === 'ArrowUp' || e.key === 'ArrowLeft') {
+        if (currentIndex > 0) {
+          btns[currentIndex - 1].focus();
+        } else {
+          btns[btns.length - 1].focus();
+        }
+      }
+    } else if (element === 'titleForEdit') {
+      if (e.key === 'ArrowUp' || e.key === 'ArrowLeft') {
+        editBtnForTodo.focus();
+      } else if (e.key === 'ArrowDown' || e.key === 'ArrowRight') {
+        descriptionForEdit.focus();
+      } else if (e.key === 'Enter') {
+        e.preventDefault();
+        editTodo(projectList);
+      }
+    } else if (element === 'descriptionForEdit') {
+      if (e.key === 'ArrowUp' || e.key === 'ArrowLeft') {
+        titleForEdit.focus();
+      } else if (e.key === 'ArrowDown' || e.key === 'ArrowRight') {
+        dueDateForEdit.focus();
+        dueDateForEdit.showPicker();
+      }
+    } else if (element === 'dueDateForEdit') {
+      if (e.key === 'ArrowUp' || e.key === 'ArrowDown' || e.key === 'ArrowLeft' || e.key === 'ArrowRight') {
+        e.preventDefault();
+
+        if (e.key === 'ArrowUp' || e.key === 'ArrowLeft') {
+          descriptionForEdit.focus();
+        } else {
+          timeForEdit.focus();
+          timeForEdit.showPicker();
+        }
+      }
+    } else if (element === 'timeForEdit') {
+      if (e.key === 'ArrowUp' || e.key === 'ArrowDown' || e.key === 'ArrowLeft' || e.key === 'ArrowRight') {
+        e.preventDefault();
+
+        if (e.key === 'ArrowUp' || e.key === 'ArrowLeft') {
+          dueDateForEdit.focus();
+          dueDateForEdit.showPicker();
+        } else {
+          priorityForEdit.focus();
+          priorityForEdit.showPicker();
+        }
+      }
+    } else if (element === 'priorityForEdit') {
+      if (e.key === 'ArrowUp' || e.key === 'ArrowDown' || e.key === 'ArrowLeft' || e.key === 'ArrowRight') {
+        e.preventDefault();
+
+        if (e.key === 'ArrowUp' || e.key === 'ArrowLeft') {
+          timeForEdit.focus();
+          timeForEdit.showPicker();
+        } else {
+          cancelEditBtnForTodo.focus();
+        }
+      }
+    } else if (element === 'cancelEditBtnForTodo') {
+      if (e.key === 'ArrowUp' || e.key === 'ArrowLeft') {
+        priorityForEdit.focus();
+        priorityForEdit.showPicker();
+      } else if (e.key === 'ArrowDown' || e.key === 'ArrowRight') {
+        editBtnForTodo.focus();
+      }
+    } else if (element === 'editBtnForTodo') {
+      if (e.key === 'ArrowUp' || e.key === 'ArrowLeft') {
+        cancelEditBtnForTodo.focus();
+      } else if (e.key === 'ArrowDown' || e.key === 'ArrowRight') {
+        titleForEdit.focus();
+      }
+    } else if (element === 'cancelDeleteBtnForTodo') {
+      if (e.key === 'ArrowUp' || e.key === 'ArrowDown' || e.key === 'ArrowLeft' || e.key === 'ArrowRight') {
+        deleteBtnForTodo.focus();
+      }
+    } else if (element === 'deleteBtnForTodo') {
+      if (e.key === 'ArrowUp' || e.key === 'ArrowDown' || e.key === 'ArrowLeft' || e.key === 'ArrowRight') {
+        cancelDeleteBtnForTodo.focus();
+      }
+    }
+  };
+
   return {
     openAddTodo,
     closeAddTodo,
@@ -409,5 +606,6 @@ export function todoController() {
     openDeleteTodo,
     closeDeleteTodo,
     deleteTodo,
+    handleArrowKey,
   };
 }

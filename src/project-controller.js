@@ -14,6 +14,14 @@ export function projectController() {
   const alertNoEditTitle = document.querySelector('.alert-no-edit-project-title');
   const alertDuplicatedTitle = document.querySelector('.alert-duplicated-title');
   const alertDuplicatedEditTitle = document.querySelector('.alert-duplicated-edit-title');
+  // For keyboard support. 
+  const adminLink = document.querySelector('.admin-link');
+  const cancelCreateBtn = document.querySelector('.cancel-create-btn');
+  const createBtn = document.querySelector('.create-btn-for-project');
+  const cancelEditBtn = document.querySelector('.cancel-edit-btn-for-project');
+  const editBtn = document.querySelector('.edit-btn-for-project');
+  const cancelDeleteBtn = document.querySelector('.cancel-delete-btn-for-project');
+  const deleteBtn = document.querySelector('.delete-btn-for-project');
 
   let projectTitle = '';
   let projectList = [];
@@ -36,13 +44,16 @@ export function projectController() {
     dialogCreateProject.showModal();
   };
 
-  const closeCreateProject = () => {
+  const closeCreateProject = (e) => {
     dialogCreateProject.close();
     projectTitleInput.value = '';
     alertNoProjectTitle.classList.remove('visible');
     alertDuplicatedTitle.classList.remove('visible');
-    projectTitle = projectTitleBtn.textContent;
-    updateContent(projectTitle, projectList);
+
+    if (e) {
+      projectTitle = projectTitleBtn.textContent;
+      updateContent(projectTitle, projectList);
+    }
   };
 
   const createProject = (lists, title) => {
@@ -92,13 +103,16 @@ export function projectController() {
     dialogEditProject.showModal();
   };
 
-  const closeEditProject = () => {
+  const closeEditProject = (e) => {
     dialogEditProject.close();
     editTitleInput.value = '';
     alertNoEditTitle.classList.remove('visible');
     alertDuplicatedEditTitle.classList.remove('visible');
-    projectTitle = projectTitleBtn.textContent;
-    updateContent(projectTitle, projectList);
+
+    if (e) {
+      projectTitle = projectTitleBtn.textContent;
+      updateContent(projectTitle, projectList);
+    }
   };
 
   const editProject = () => {
@@ -144,10 +158,13 @@ export function projectController() {
     dialogDeleteProject.showModal();
   };
 
-  const closeDeleteProject = () => {
+  const closeDeleteProject = (e) => {
     dialogDeleteProject.close();
-    projectTitle = projectTitleBtn.textContent;
-    updateContent(projectTitle, projectList);
+
+    if (e) {
+      projectTitle = projectTitleBtn.textContent;
+      updateContent(projectTitle, projectList);
+    }
   };
 
   const deleteProject = () => {
@@ -164,7 +181,7 @@ export function projectController() {
           projectTitle = projectList[0][0].project;
           arrowBtns.forEach((btn) => (btn.classList.remove('visible')));
         } else {
-          if (projectList.length === i) {
+          if (!projectList[i]) {
             projectTitle = projectList[0][0].project;
           } else {
             projectTitle = projectList[i][0].project;
@@ -179,17 +196,14 @@ export function projectController() {
 
   const switchProject = (arrowBtn) => {
     if (!arrowBtn) {
-      if (projectList[0] === undefined) {
-        projectTitle === 'Start Project';
-      } else {
-        projectTitle = projectList[0][0].project;
-      }
+      projectTitle = projectList[0][0].project;
     } else {
+      projectTitle = projectTitleBtn.textContent;
       let listIndex = 0;
       
       for (let i = 0; i < projectList.length; i++) {
         const list = projectList[i];
-
+        
         if (list[0].project === projectTitle) {
           if (arrowBtn === 'left-btn' || arrowBtn === 'ArrowLeft') {
             listIndex = i - 1;
@@ -199,7 +213,7 @@ export function projectController() {
             }
           } else {
             listIndex = i + 1;
-
+            
             if (listIndex >= projectList.length) {
               listIndex = 0;
             }
@@ -220,11 +234,127 @@ export function projectController() {
         }
       }
     }
+    
+    updateContent(projectTitle, projectList);
+  };
+
+  const updateProjectList = (list) => {
+    projectList = list;
+    projectTitle = projectList[0][0].project;
+    
+    if (addTodoBtn.classList.contains('hidden')) {
+      addTodoBtn.classList.remove('hidden');
+    }
+
+    if (projectList.length >= 2) {
+      arrowBtns.forEach((btn) => btn.classList.add('visible'));
+    }
 
     updateContent(projectTitle, projectList);
   };
 
   const getProjectList = () => projectList;
+  const saveProjectList = (projectList) => localStorage.setItem('projectList', JSON.stringify(projectList));
+
+  const handleArrowKey = (element, e) => {
+    if (element === 'projectTitleBtn') {
+      if (e.key === 'ArrowLeft' || e.key === 'ArrowRight') {
+        switchProject(e.key);
+      } else if (e.key === 'ArrowUp') {
+        adminLink.focus();
+      } else if (e.key === 'ArrowDown') {
+        addTodoBtn.focus();
+      }
+    } else if (element === 'leftBtn') {
+      if (e.key === 'ArrowLeft') {
+        switchProject(e.key);
+      } else if (e.key === 'ArrowRight') {
+        projectTitleBtn.focus();
+      } else if (e.key === 'ArrowUp') {
+        adminLink.focus();
+      } else if (e.key === 'ArrowDown') {
+        addTodoBtn.focus();
+      }
+    } else if (element === 'rightBtn') {
+      if (e.key === 'ArrowLeft') {
+        projectTitleBtn.focus();
+      } else if (e.key === 'ArrowRight') {
+        switchProject(e.key);
+      } else if (e.key === 'ArrowUp') {
+        adminLink.focus();
+      } else if (e.key === 'ArrowDown') {
+        addTodoBtn.focus();
+      }
+    } else if (element === 'btnContainerForProject') {
+      const btns = document.querySelectorAll('.btn-for-control-project');
+      const activeElement = document.activeElement;
+      const currentIndex = Array.from(btns).indexOf(activeElement);
+      
+      if (e.key === 'ArrowDown' || e.key === 'ArrowRight') {
+        if (currentIndex < btns.length - 1) {
+          btns[currentIndex + 1].focus();
+        } else {
+          btns[0].focus();
+        }
+      } else if (e.key === 'ArrowUp' || e.key === 'ArrowLeft') {
+        if (currentIndex > 0) {
+          btns[currentIndex - 1].focus();
+        } else {
+          btns[btns.length - 1].focus();
+        }
+      }
+    } else if (element === 'projectTitleInput') {
+      if (e.key === 'ArrowUp' || e.key === 'ArrowRight') {
+        createBtn.focus();
+      } else if (e.key === 'ArrowDown' || e.key === 'ArrowLeft') {
+        cancelCreateBtn.focus();
+      } else if (e.key === 'Enter') {
+        e.preventDefault();
+        createProject();
+      }
+    } else if (element === 'cancelCreateBtn') {
+      if (e.key === 'ArrowUp' || e.key === 'ArrowDown') {
+        projectTitleInput.focus();
+      } else if (e.key === 'ArrowLeft' || e.key === 'ArrowRight') {
+        createBtn.focus();
+      }
+    } else if (element === 'createBtn') {
+      if (e.key === 'ArrowUp' || e.key === 'ArrowDown') {
+        projectTitleInput.focus();
+      } else if (e.key === 'ArrowLeft' || e.key === 'ArrowRight') {
+        cancelCreateBtn.focus();
+      }
+    } else if (element === 'editTitleInput') {
+      if (e.key === 'ArrowUp' || e.key === 'ArrowRight') {
+        editBtn.focus();
+      } else if (e.key === 'ArrowDown' || e.key === 'ArrowLeft') {
+        cancelEditBtn.focus();
+      } else if (e.key === 'Enter') {
+        e.preventDefault();
+        editProject();
+      }
+    } else if (element === 'cancelEditBtn') {
+      if (e.key === 'ArrowUp' || e.key === 'ArrowDown') {
+        editTitleInput.focus();
+      } else if (e.key === 'ArrowLeft' || e.key === 'ArrowRight') {
+        editBtn.focus();
+      }
+    } else if (element === 'editBtn') {
+      if (e.key === 'ArrowUp' || e.key === 'ArrowDown') {
+        editTitleInput.focus();
+      } else if (e.key === 'ArrowLeft' || e.key === 'ArrowRight') {
+        cancelEditBtn.focus();
+      }
+    } else if (element === 'cancelDeleteBtn') {
+      if (e.key === 'ArrowUp' || e.key === 'ArrowDown' || e.key === 'ArrowLeft' || e.key === 'ArrowRight') {
+        deleteBtn.focus();
+      }
+    } else if (element === 'deleteBtn') {
+      if (e.key === 'ArrowUp' || e.key === 'ArrowDown' || e.key === 'ArrowLeft' || e.key === 'ArrowRight') {
+        cancelDeleteBtn.focus();
+      }
+    }
+  };
 
   return {
     openControlProject,
@@ -239,6 +369,9 @@ export function projectController() {
     closeDeleteProject,
     deleteProject,
     switchProject,
+    updateProjectList,
     getProjectList,
+    saveProjectList,
+    handleArrowKey,
   };
 }

@@ -1,7 +1,16 @@
-export function renderTodo(projectTitle, renderingList) {
+export function renderTodo(projectTitle, projectList) {
   const projectTitleBtn = document.querySelector('.project-title-btn');
   const todoContainer = document.getElementById('todo-container');
   let todoHTML = '';
+  let renderingList = [];
+
+  for (let i = 0; i < projectList.length; i++) {
+    const list = projectList[i];
+
+    if (list[0].project === projectTitle) {
+      renderingList = list;
+    }
+  }
   
   if (renderingList[0] && renderingList[0].id !== 0) {
     for (let i = 0; i < renderingList.length; i++) {
