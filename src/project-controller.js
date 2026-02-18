@@ -14,7 +14,7 @@ export function projectController() {
   const alertNoEditTitle = document.querySelector('.alert-no-edit-project-title');
   const alertDuplicatedTitle = document.querySelector('.alert-duplicated-title');
   const alertDuplicatedEditTitle = document.querySelector('.alert-duplicated-edit-title');
-  // For keyboard support. 
+  // For keyboard support.
   const adminLink = document.querySelector('.admin-link');
   const cancelCreateBtn = document.querySelector('.cancel-create-btn');
   const createBtn = document.querySelector('.create-btn-for-project');
@@ -123,28 +123,25 @@ export function projectController() {
       alertDuplicatedEditTitle.classList.remove('visible');
       alertNoEditTitle.classList.add('visible');
       return;
-    } else if (oldProjectTitle === newProjectTitle) {
-      closeEditProject();
-      return;
-    }
-    
-    for (let i = 0; i < projectList.length; i++) {
-      const list = projectList[i];
+    } else if (oldProjectTitle !== newProjectTitle) {
+      for (let i = 0; i < projectList.length; i++) {
+        const list = projectList[i];
 
-      if (list[0].project === editTitleInput.value) {
-        alertNoEditTitle.classList.remove('visible');
-        alertDuplicatedEditTitle.classList.add('visible');
-        return;
+        if (list[0].project === editTitleInput.value) {
+          alertNoEditTitle.classList.remove('visible');
+          alertDuplicatedEditTitle.classList.add('visible');
+          return;
+        }
       }
-    }
 
-    for (let i = 0; i < projectList.length; i++) {
-      const list = projectList[i];
+      for (let i = 0; i < projectList.length; i++) {
+        const list = projectList[i];
 
-      if (list[0].project === oldProjectTitle) {
-        for (let j = 0; j < list.length; j++) {
-          const todo = list[j];
-          todo.project = newProjectTitle;
+        if (list[0].project === oldProjectTitle) {
+          for (let j = 0; j < list.length; j++) {
+            const todo = list[j];
+            todo.project = newProjectTitle;
+          }
         }
       }
     }
