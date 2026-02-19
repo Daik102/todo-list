@@ -116,14 +116,14 @@ export function projectController() {
   };
 
   const editProject = () => {
-    const oldProjectTitle = projectTitleBtn.textContent;
+    projectTitle = projectTitleBtn.textContent;
     const newProjectTitle = editTitleInput.value;
 
     if (newProjectTitle === '') {
       alertDuplicatedEditTitle.classList.remove('visible');
       alertNoEditTitle.classList.add('visible');
       return;
-    } else if (oldProjectTitle !== newProjectTitle) {
+    } else if (projectTitle !== newProjectTitle) {
       for (let i = 0; i < projectList.length; i++) {
         const list = projectList[i];
 
@@ -137,7 +137,7 @@ export function projectController() {
       for (let i = 0; i < projectList.length; i++) {
         const list = projectList[i];
 
-        if (list[0].project === oldProjectTitle) {
+        if (list[0].project === projectTitle) {
           for (let j = 0; j < list.length; j++) {
             const todo = list[j];
             todo.project = newProjectTitle;
@@ -165,12 +165,12 @@ export function projectController() {
   };
 
   const deleteProject = () => {
+    projectTitle = projectTitleBtn.textContent;
+
     for (let i = 0; i < projectList.length; i++) {
       const list = projectList[i];
-
       if (list[0].project === projectTitle) {
         projectList.splice(i, 1);
-
         if (projectList[0] === undefined) {
           projectTitle = 'Start Project';
           addTodoBtn.classList.add('hidden');
