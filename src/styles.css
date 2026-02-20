@@ -562,7 +562,13 @@ dialog svg {
   }
 }
 
-@media screen and (min-width: 48rem) and (min-height: calc(82rem - 100px)) {
+@media screen and (orientation: portrait) and (min-width: 56rem) {
+  html {
+    font-size: 13px;
+  }
+}
+
+@media screen and (orientation: portrait) and (min-width: 64rem) {
   html {
     font-size: 14px;
   }
