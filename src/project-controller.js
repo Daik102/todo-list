@@ -254,7 +254,15 @@ export function projectController() {
   const saveProjectList = (projectList) => localStorage.setItem('projectList', JSON.stringify(projectList));
 
   const handleArrowKey = (element, e) => {
-    if (element === 'projectTitleBtn') {
+    if (element === 'initial') {
+      if (e.key === 'ArrowLeft' || e.key === 'ArrowRight' || e.key === 'ArrowUp' || e.key === 'ArrowDown') {
+        const activeElement = document.activeElement;
+
+        if (activeElement === document.body) {
+          projectTitleBtn.focus();
+        }
+      }
+    } else if (element === 'projectTitleBtn') {
       if (e.key === 'ArrowLeft' || e.key === 'ArrowRight') {
         switchProject(e.key);
       } else if (e.key === 'ArrowUp') {

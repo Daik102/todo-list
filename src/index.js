@@ -120,6 +120,7 @@ deleteBtnForTodo.addEventListener('click', () => {
   todo.deleteTodo(projectList);
 });
 
+document.addEventListener('keydown', (e) => project.handleArrowKey('initial', e));
 projectTitleBtn.addEventListener('keydown', (e) => project.handleArrowKey('projectTitleBtn', e));
 leftBtn.addEventListener('keydown', (e) => project.handleArrowKey('leftBtn', e));
 rightBtn.addEventListener('keydown', (e) => project.handleArrowKey('rightBtn', e));
@@ -136,7 +137,7 @@ addTodoBtn.addEventListener('keydown', (e) => todo.handleArrowKey('addTodoBtn', 
 
 title.addEventListener('keydown', (e) => {
   const projectList = project.getProjectList();
-  todo.handleArrowKey('title', e, projectList)
+  todo.handleArrowKey('title', e, projectList);
 });
 
 description.addEventListener('keydown', (e) => todo.handleArrowKey('description', e));
