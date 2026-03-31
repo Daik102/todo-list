@@ -14,8 +14,10 @@ export function projectController() {
   const alertNoEditTitle = document.querySelector('.alert-no-edit-project-title');
   const alertDuplicatedTitle = document.querySelector('.alert-duplicated-title');
   const alertDuplicatedEditTitle = document.querySelector('.alert-duplicated-edit-title');
+  const alertForbiddenTitle = document.querySelector('.alert-forbidden-title');
+  const alertForbiddenEditTitle = document.querySelector('.alert-forbidden-edit-title');
   // For keyboard support.
-  const adminLink = document.querySelector('.admin-link');
+  const link = document.querySelector('.link');
   const cancelCreateBtn = document.querySelector('.cancel-create-btn');
   const createBtn = document.querySelector('.create-btn-for-project');
   const cancelEditBtn = document.querySelector('.cancel-edit-btn-for-project');
@@ -32,7 +34,7 @@ export function projectController() {
 
   const closeControlProject = (e) => {
     dialogControlProject.close();
-
+    
     if (e) {
       projectTitle = projectTitleBtn.textContent;
       updateContent(projectTitle, projectList);
@@ -49,7 +51,8 @@ export function projectController() {
     projectTitleInput.value = '';
     alertNoProjectTitle.classList.remove('visible');
     alertDuplicatedTitle.classList.remove('visible');
-
+    alertForbiddenTitle.classList.remove('visible');
+    
     if (e) {
       projectTitle = projectTitleBtn.textContent;
       updateContent(projectTitle, projectList);
@@ -66,6 +69,7 @@ export function projectController() {
       
       if (projectTitle === '') {
         alertDuplicatedTitle.classList.remove('visible');
+        alertForbiddenTitle.classList.remove('visible');
         alertNoProjectTitle.classList.add('visible');
         return;
       }
@@ -75,9 +79,17 @@ export function projectController() {
 
         if (list[0].project === projectTitleInput.value) {
           alertNoProjectTitle.classList.remove('visible');
+          alertForbiddenTitle.classList.remove('visible');
           alertDuplicatedTitle.classList.add('visible');
           return;
         }
+      }
+
+      if (projectTitle === 'Start Project') {
+        alertNoProjectTitle.classList.remove('visible');
+        alertDuplicatedTitle.classList.remove('visible');
+        alertForbiddenTitle.classList.add('visible');
+        return;
       }
     }
     
@@ -108,6 +120,7 @@ export function projectController() {
     editTitleInput.value = '';
     alertNoEditTitle.classList.remove('visible');
     alertDuplicatedEditTitle.classList.remove('visible');
+    alertForbiddenEditTitle.classList.remove('visible');
 
     if (e) {
       projectTitle = projectTitleBtn.textContent;
@@ -121,6 +134,7 @@ export function projectController() {
 
     if (newProjectTitle === '') {
       alertDuplicatedEditTitle.classList.remove('visible');
+      alertForbiddenEditTitle.classList.remove('visible');
       alertNoEditTitle.classList.add('visible');
       return;
     } else if (projectTitle !== newProjectTitle) {
@@ -129,9 +143,17 @@ export function projectController() {
 
         if (list[0].project === editTitleInput.value) {
           alertNoEditTitle.classList.remove('visible');
+          alertForbiddenEditTitle.classList.remove('visible');
           alertDuplicatedEditTitle.classList.add('visible');
           return;
         }
+      }
+
+      if (newProjectTitle === 'Start Project') {
+        alertNoEditTitle.classList.remove('visible');
+        alertDuplicatedEditTitle.classList.remove('visible');
+        alertForbiddenEditTitle.classList.add('visible');
+        return;
       }
 
       for (let i = 0; i < projectList.length; i++) {
@@ -192,6 +214,7 @@ export function projectController() {
   };
 
   const switchProject = (arrowBtn) => {
+    console.log(arrowBtn.target);
     if (!arrowBtn) {
       projectTitle = projectList[0][0].project;
     } else {
@@ -202,7 +225,7 @@ export function projectController() {
         const list = projectList[i];
         
         if (list[0].project === projectTitle) {
-          if (arrowBtn === 'left-btn' || arrowBtn === 'ArrowLeft') {
+          if (arrowBtn.target.classList.contains('left-btn') || arrowBtn === 'ArrowLeft') {
             listIndex = i - 1;
 
             if (listIndex < 0) {
@@ -266,7 +289,7 @@ export function projectController() {
       if (e.key === 'ArrowLeft' || e.key === 'ArrowRight') {
         switchProject(e.key);
       } else if (e.key === 'ArrowUp') {
-        adminLink.focus();
+        link.focus();
       } else if (e.key === 'ArrowDown') {
         addTodoBtn.focus();
       }
@@ -276,7 +299,7 @@ export function projectController() {
       } else if (e.key === 'ArrowRight') {
         projectTitleBtn.focus();
       } else if (e.key === 'ArrowUp') {
-        adminLink.focus();
+        link.focus();
       } else if (e.key === 'ArrowDown') {
         addTodoBtn.focus();
       }
@@ -286,7 +309,7 @@ export function projectController() {
       } else if (e.key === 'ArrowRight') {
         switchProject(e.key);
       } else if (e.key === 'ArrowUp') {
-        adminLink.focus();
+        link.focus();
       } else if (e.key === 'ArrowDown') {
         addTodoBtn.focus();
       }

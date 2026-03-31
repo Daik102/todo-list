@@ -119,7 +119,7 @@ export function todoController() {
   const cancelAddBtn = document.querySelector('.cancel-add-btn-for-project');
   const addBtn = document.querySelector('.add-btn-for-project');
   const addTodoBtn = document.querySelector('.add-todo-btn');
-  const adminLink = document.querySelector('.admin-link');
+  const link = document.querySelector('.link');
   const cancelEditBtnForTodo = document.querySelector('.cancel-edit-btn-for-todo');
   const editBtnForTodo = document.querySelector('.edit-btn-for-todo');
   const cancelDeleteBtnForTodo = document.querySelector('.cancel-delete-btn-for-todo');
@@ -485,7 +485,7 @@ export function todoController() {
         if (currentIndex < todoItems.length - 1) {
           todoItems[currentIndex + 1].focus();
         } else {
-          adminLink.focus();
+          link.focus();
         }
       } else if (e.key === 'ArrowUp' || e.key === 'ArrowLeft') {
         if (currentIndex > 0) {
@@ -494,7 +494,7 @@ export function todoController() {
           addTodoBtn.focus();
         }
       }
-    } else if (element === 'adminLink') {
+    } else if (element === 'link') {
       if (e.key === 'ArrowUp' || e.key === 'ArrowLeft') {
         const todoItems = document.querySelectorAll('.todo-item');
         todoItems[todoItems.length - 1].focus();

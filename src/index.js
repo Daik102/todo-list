@@ -41,7 +41,7 @@ const dueDate = document.getElementById('due-date');
 const time = document.getElementById('time');
 const priority = document.getElementById('priority');
 const todoContainer = document.getElementById('todo-container');
-const adminLink = document.querySelector('.admin-link');
+const link = document.querySelector('.link');
 const titleForEdit = document.getElementById('title-for-edit');
 const descriptionForEdit = document.getElementById('description-for-edit');
 const dueDateForEdit = document.getElementById('due-date-for-edit');
@@ -56,21 +56,17 @@ projectTitleBtn.addEventListener('click', () => {
   }
 });
 
-cancelProjectBtn.addEventListener('click', (e) => project.closeControlProject(e));
+cancelProjectBtn.addEventListener('click', project.closeControlProject);
 createProjectBtn.addEventListener('click', project.openCreateProject);
-cancelCreateBtn.addEventListener('click', (e) => project.closeCreateProject(e));
+cancelCreateBtn.addEventListener('click', project.closeCreateProject);
 createBtn.addEventListener('click', project.createProject);
 editProjectBtn.addEventListener('click', project.openEditProject);
-cancelEditBtn.addEventListener('click', (e) => project.closeEditProject(e));
+cancelEditBtn.addEventListener('click', project.closeEditProject);
 editBtn.addEventListener('click', project.editProject);
 deleteProjectBtn.addEventListener('click', project.openDeleteProject);
-cancelDeleteBtn.addEventListener('click', (e) => project.closeDeleteProject(e));
+cancelDeleteBtn.addEventListener('click', project.closeDeleteProject);
 deleteBtn.addEventListener('click', project.deleteProject);
-
-arrowBtns.forEach((btn) => {
-  btn.addEventListener('click', (e) => project.switchProject(e.target.classList[1]));
-});
-
+arrowBtns.forEach((btn) => btn.addEventListener('click', project.switchProject));
 addTodoBtn.addEventListener('click', todo.openAddTodo);
 
 cancelAddBtn.addEventListener('click', () => {
@@ -147,7 +143,7 @@ priority.addEventListener('keydown', (e) => todo.handleArrowKey('priority', e));
 cancelAddBtn.addEventListener('keydown', (e) => todo.handleArrowKey('cancelAddBtn', e));
 addBtn.addEventListener('keydown', (e) => todo.handleArrowKey('addBtn', e));
 todoContainer.addEventListener('keydown', (e) => todo.handleArrowKey('todoContainer', e));
-adminLink.addEventListener('keydown', (e) => todo.handleArrowKey('adminLink', e));
+link.addEventListener('keydown', (e) => todo.handleArrowKey('link', e));
 btnContainerForTodo.addEventListener('keydown', (e) => todo.handleArrowKey('btnContainerForTodo', e));
 
 titleForEdit.addEventListener('keydown', (e) => {
