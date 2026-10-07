@@ -44,11 +44,4 @@ export function renderTodo(projectTitle, projectList) {
 
   projectTitleBtn.textContent = projectTitle;
   todoContainer.innerHTML = todoHTML;
-
-  const todoItems = document.querySelectorAll('.todo-item');
-
-  todoItems.forEach((item, i) => {
-    const duration = i * 0.15 + 0.6;
-    item.style.animation = `slide-todo ${duration}s`;
-  });
 }
