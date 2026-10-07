@@ -33,7 +33,7 @@
 }
 
 html {
-  font-size: 10px;
+  font-size: 50%;
 }
 
 body {
@@ -44,21 +44,22 @@ body {
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 6rem;
+  gap: 4rem;
   width: 100%;
+  max-width: 52rem;
   min-height: 100vh;
   margin: 0 auto;
-  padding: 6rem 0;
+  padding: 6rem 2.4rem 4rem;
   background-color: var(--main-theme);
 }
 
 dialog {
-  width: 48rem;
-  margin: 2rem auto;
+  width: 100%;
+  max-width: 52rem;
+  margin: 0 auto;
   background-color: var(--super-lightblue-theme);
-  border-radius: 0.8rem;
   border: none;
-  animation: falling-dialog 0.6s;
+  animation: falling-dialog 0.5s;
 }
 
 @keyframes falling-dialog {
@@ -89,7 +90,7 @@ dialog::backdrop {
 
 .dialog-add-todo,
 .dialog-edit-todo {
-  padding: 2.8rem;
+  padding: 2rem;
 }
 
 .dialog-create-project form,
@@ -110,8 +111,8 @@ dialog::backdrop {
 
 .dialog-delete-project form,
 .dialog-delete-todo form {
-  gap: 8.8rem;
-  padding: 5rem 0 1.2rem;
+  gap: 8rem;
+  padding: 4.4rem 0 1.2rem;
 }
 
 .dialog-add-todo form,
@@ -149,6 +150,7 @@ dialog textarea,
 dialog select {
   background-color: var(--white-theme);
   border-radius: 0.4rem;
+  border: 0.1rem solid var(--gray-theme);
 }
 
 dialog input,
@@ -204,14 +206,19 @@ dialog svg {
 
 .date-time-row p {
   display: flex;
-  justify-content: space-between;
-  align-items: center;
+  flex-direction: column;
+  align-items: flex-start;
   gap: 0.4rem;
 }
 
 #due-date,
 #due-date-for-edit {
-  width: 15.6rem;
+  width: 14.4rem;
+}
+
+#time,
+#time-for-edit {
+  width: 12.4rem;
 }
 
 .dialog-add-todo .btn-container,
@@ -219,7 +226,7 @@ dialog svg {
   display: flex;
   justify-content: center;
   width: 100%;
-  margin-top: 3.2rem;
+  margin-top: 2.8rem;
 }
 
 .btn-container {
@@ -297,7 +304,7 @@ dialog svg {
 
 .alert-no-project-title,
 .alert-no-edit-project-title {
-  margin: -3.4rem 3.2rem 0 0;
+  margin-top: -3.2rem;
 }
 
 .alert-duplicated-title,
@@ -309,7 +316,7 @@ dialog svg {
 
 .alert-no-todo-title,
 .alert-no-edit-todo-title {
-  margin: -0.2rem 0 0 5rem;
+  margin-left: 5rem;
 }
 
 .main {
@@ -317,6 +324,7 @@ dialog svg {
   display: flex;
   flex-direction: column;
   align-items: center;
+  width: 100%;
 }
 
 .app-title,
@@ -336,7 +344,7 @@ dialog svg {
   justify-content: center;
   align-items: center;
   gap: 0.4rem;
-  margin-bottom: 3.2rem;
+  margin-bottom: 2.8rem;
 }
 
 .project-title-row button {
@@ -364,13 +372,17 @@ dialog svg {
 }
 
 .project-title-btn {
+  width: 21.2rem;
   padding: 0.4rem 0.8rem;
   font-size: 2.8rem;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
   background-color: var(--transparent-theme);
 }
 
 .add-todo-btn {
-  margin-bottom: 4.6rem;
+  margin-bottom: 4.2rem;
   background-color: var(--lightblue-theme);
   box-shadow: 0 0.6rem 0 var(--blue-shadow-theme);
 }
@@ -390,7 +402,8 @@ dialog svg {
 
 #todo-container {
   list-style: none;
-  width: 48rem;
+  width: 100%;
+  max-width: 44rem;
   border-radius: 0.8rem;
 }
 
@@ -405,16 +418,6 @@ dialog svg {
   background-color: var(--white-theme);
   cursor: pointer;
   transition: opacity 0.15s;
-}
-
-@keyframes slide-todo {
-  from {
-    transform: translate(-48rem);
-  }
-
-  to {
-    transform: translate(0);
-  }
 }
 
 .todo-item:hover {
@@ -510,108 +513,27 @@ dialog svg {
 .link:hover {
   text-decoration: underline;
 }
-/* For smartphones in portrait mode */
-@media screen and (orientation: portrait)  and (max-width: 32rem) {
-  html {
-    font-size: 6.5px;
-  }
 
-  dialog,
-  #todo-container {
-    width: 44rem;
+/* Middle and Large Smartphones */
+@media screen and (min-width: 24.25em) {
+  html {
+    font-size: 56.25%;
   }
 
   .date-time-row p {
-    flex-direction: column;
-    align-items: flex-start;
-    gap: 0.2rem;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
   }
 }
 
-@media screen and (orientation: portrait) and (min-width: 22.5em) {
+/* Tablets and Desktops */
+@media screen and (min-width: 48em) {
   html {
-    font-size: 7.25px;
-  }
-}
-
-@media screen and (orientation: portrait) and (min-width: 23.4em) {
-  html {
-    font-size: 7.5px;
-  }
-}
-
-@media screen and (orientation: portrait) and (min-width: 24.3em) {
-  html {
-    font-size: 7.75px;
-  }
-}
-
-@media screen and (orientation: portrait) and (min-width: 25.75em) {
-  html {
-    font-size: 8.25px;
-  }
-}
-
-@media screen and (orientation: portrait) and (min-width: 26.75em) {
-  html {
-    font-size: 8.5px;
-  }
-}
-/* For tablets in portrait mode */
-@media screen and (orientation: portrait) and (min-width: 48em) {
-  html {
-    font-size: 10px;
-  }
-}
-/* For smartphones in landscape mode */
-@media screen and (orientation: landscape) {
-  html {
-    font-size: 6.5px;
+    font-size: 62.5%;
   }
 
-  .wrapper {
-    width: 60rem;
-  }
-}
-
-@media screen and (orientation: landscape) and (min-width: 41.6em) {
-  html {
-    font-size: 7.25px;
-  }
-}
-
-@media screen and (orientation: landscape) and (min-width: 46.25em) {
-  html {
-    font-size: 7.5px;
-  }
-}
-
-@media screen and (orientation: landscape) and (min-width: 50em) {
-  html {
-    font-size: 7.75px;
-  }
-}
-
-@media screen and (orientation: landscape) and (min-width: 52.7em) {
-  html {
-    font-size: 8px;
-  }
-}
-
-@media screen and (orientation: landscape) and (min-width: 55.75em) {
-  html {
-    font-size: 8.25px;
-  }
-}
-
-@media screen and (orientation: landscape) and (min-width: 58em) {
-  html {
-    font-size: 8.5px;
-  }
-}
-/* For tablets in landscape mode, laptops, and desktops */
-@media screen and (orientation: landscape) and (min-width: 64em) {
-  html {
-    font-size: 10px;
+  dialog {
+    max-width: 44rem;
   }
 }
