@@ -5,7 +5,7 @@ import { renderTodo } from './render';
 
 const project = projectController();
 const todo = todoController();
-// For project-controller.
+// For project-controller
 const projectTitleBtn = document.querySelector('.project-title-btn');
 const cancelProjectBtn = document.querySelector('.cancel-project-btn');
 const createProjectBtn = document.querySelector('.create-project-btn');
@@ -18,8 +18,10 @@ const deleteProjectBtn = document.querySelector('.delete-project-btn');
 const cancelDeleteBtn = document.querySelector('.cancel-delete-btn-for-project');
 const deleteBtn = document.querySelector('.delete-btn-for-project');
 const arrowBtns = document.querySelectorAll('.arrow-btn');
-// For todo-controller.
+// For todo-controller
 const addTodoBtn = document.querySelector('.add-todo-btn');
+const title = document.getElementById('title');
+const description = document.getElementById('description');
 const cancelAddBtn = document.querySelector('.cancel-add-btn-for-project');
 const addBtn = document.querySelector('.add-btn-for-project');
 const cancelTodoBtn = document.querySelector('.cancel-todo-btn');
@@ -30,7 +32,7 @@ const editBtnForTodo = document.querySelector('.edit-btn-for-todo');
 const deleteTodoBtn = document.querySelector('.delete-todo-btn');
 const cancelDeleteBtnForTodo = document.querySelector('.cancel-delete-btn-for-todo');
 const deleteBtnForTodo = document.querySelector('.delete-btn-for-todo');
-// For keyboard support.
+// For keyboard support
 const leftBtn = document.querySelector('.left-btn');
 const rightBtn = document.querySelector('.right-btn');
 const btnContainerForProject = document.querySelector('.btn-container-for-control-project');
@@ -180,13 +182,13 @@ export function updateContent(projectTitle, projectList) {
 
   project.saveProjectList(projectList);
 }
-// For initial loading.
+// Initial loading
 const projectList = JSON.parse(localStorage.getItem('projectList')) || project.getProjectList();
 
 if (projectList.length >= 1) {
   project.updateProjectList(projectList);
 } else {
-  // Some default items.
+  // Default items
   const todoOne = todoGenerator(
     'Daily life',
     'unchecked',
