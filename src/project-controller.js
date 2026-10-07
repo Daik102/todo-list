@@ -16,7 +16,9 @@ export function projectController() {
   const alertDuplicatedEditTitle = document.querySelector('.alert-duplicated-edit-title');
   const alertForbiddenTitle = document.querySelector('.alert-forbidden-title');
   const alertForbiddenEditTitle = document.querySelector('.alert-forbidden-edit-title');
-  // For keyboard support.
+  // For keyboard support
+  const leftBtn = document.querySelector('.left-btn');
+  const rightBtn = document.querySelector('.right-btn');
   const link = document.querySelector('.link');
   const cancelCreateBtn = document.querySelector('.cancel-create-btn');
   const createBtn = document.querySelector('.create-btn-for-project');
@@ -214,7 +216,6 @@ export function projectController() {
   };
 
   const switchProject = (arrowBtn) => {
-    console.log(arrowBtn.target);
     if (!arrowBtn) {
       projectTitle = projectList[0][0].project;
     } else {
@@ -225,7 +226,7 @@ export function projectController() {
         const list = projectList[i];
         
         if (list[0].project === projectTitle) {
-          if (arrowBtn.target.classList.contains('left-btn') || arrowBtn === 'ArrowLeft') {
+          if (arrowBtn === 'ArrowLeft') {
             listIndex = i - 1;
 
             if (listIndex < 0) {
@@ -243,15 +244,10 @@ export function projectController() {
 
       projectTitle = projectList[listIndex][0].project;
 
-      if (arrowBtn === 'ArrowLeft' || arrowBtn === 'ArrowRight' || arrowBtn === 'ArrowUp' || arrowBtn === 'ArrowDown') {
-        const leftBtn = document.querySelector('.left-btn');
-        const rightBtn = document.querySelector('.right-btn');
-
-        if (arrowBtn === 'ArrowLeft' || arrowBtn === 'ArrowUp') {
-          leftBtn.focus();
-        } else {
-          rightBtn.focus();
-        }
+      if (arrowBtn === 'ArrowLeft') {
+        leftBtn.focus();
+      } else if (arrowBtn === 'ArrowRight') {
+        rightBtn.focus();
       }
     }
     
@@ -277,13 +273,11 @@ export function projectController() {
   const saveProjectList = (projectList) => localStorage.setItem('projectList', JSON.stringify(projectList));
 
   const handleArrowKey = (element, e) => {
-    if (element === 'initial') {
-      if (e.key === 'ArrowLeft' || e.key === 'ArrowRight' || e.key === 'ArrowUp' || e.key === 'ArrowDown') {
-        const activeElement = document.activeElement;
+    if (element === 'initial' && e.key && e.key.includes('Arrow')) {
+      const activeElement = document.activeElement;
 
-        if (activeElement === document.body) {
-          projectTitleBtn.focus();
-        }
+      if (activeElement === document.body) {
+        projectTitleBtn.focus();
       }
     } else if (element === 'projectTitleBtn') {
       if (e.key === 'ArrowLeft' || e.key === 'ArrowRight') {
@@ -332,53 +326,58 @@ export function projectController() {
         }
       }
     } else if (element === 'projectTitleInput') {
-      if (e.key === 'ArrowUp' || e.key === 'ArrowRight') {
+      if (e.key === 'ArrowUp') {
         createBtn.focus();
-      } else if (e.key === 'ArrowDown' || e.key === 'ArrowLeft') {
+      } else if (e.key === 'ArrowDown') {
         cancelCreateBtn.focus();
       } else if (e.key === 'Enter') {
         e.preventDefault();
         createProject();
       }
     } else if (element === 'cancelCreateBtn') {
-      if (e.key === 'ArrowUp' || e.key === 'ArrowDown') {
+      if (e.key === 'ArrowUp' || e.key === 'ArrowLeft') {
         projectTitleInput.focus();
-      } else if (e.key === 'ArrowLeft' || e.key === 'ArrowRight') {
+      } else if (e.key === 'ArrowDown' || e.key === 'ArrowRight') {
         createBtn.focus();
       }
     } else if (element === 'createBtn') {
-      if (e.key === 'ArrowUp' || e.key === 'ArrowDown') {
-        projectTitleInput.focus();
-      } else if (e.key === 'ArrowLeft' || e.key === 'ArrowRight') {
+      if (e.key === 'ArrowUp' || e.key === 'ArrowLeft') {
         cancelCreateBtn.focus();
+      } else if (e.key === 'ArrowDown' || e.key === 'ArrowRight') {
+        projectTitleInput.focus();
+      }
+      if (e.key === 'ArrowUp' || e.key === 'ArrowLeft') {
+        cancelCreateBtn.focus();
+      }else if (e.key === 'ArrowDown' || e.key === 'ArrowRight') {
+        projectTitleInput.focus();
       }
     } else if (element === 'editTitleInput') {
-      if (e.key === 'ArrowUp' || e.key === 'ArrowRight') {
+      if (e.key === 'ArrowUp') {
         editBtn.focus();
-      } else if (e.key === 'ArrowDown' || e.key === 'ArrowLeft') {
+      } else if (e.key === 'ArrowDown') {
         cancelEditBtn.focus();
       } else if (e.key === 'Enter') {
         e.preventDefault();
         editProject();
       }
     } else if (element === 'cancelEditBtn') {
-      if (e.key === 'ArrowUp' || e.key === 'ArrowDown') {
+      if (e.key === 'ArrowUp' || e.key === 'ArrowLeft') {
         editTitleInput.focus();
-      } else if (e.key === 'ArrowLeft' || e.key === 'ArrowRight') {
+      } else if (e.key === 'ArrowDown' || e.key === 'ArrowRight') {
         editBtn.focus();
       }
     } else if (element === 'editBtn') {
-      if (e.key === 'ArrowUp' || e.key === 'ArrowDown') {
-        editTitleInput.focus();
-      } else if (e.key === 'ArrowLeft' || e.key === 'ArrowRight') {
+      if (e.key === 'ArrowUp' || e.key === 'ArrowLeft') {
         cancelEditBtn.focus();
+      } else if (e.key === 'ArrowDown' || e.key === 'ArrowRight') {
+        editTitleInput.focus();
       }
     } else if (element === 'cancelDeleteBtn') {
-      if (e.key === 'ArrowUp' || e.key === 'ArrowDown' || e.key === 'ArrowLeft' || e.key === 'ArrowRight') {
+      if (e.key.includes('Arrow')) {
         deleteBtn.focus();
       }
     } else if (element === 'deleteBtn') {
-      if (e.key === 'ArrowUp' || e.key === 'ArrowDown' || e.key === 'ArrowLeft' || e.key === 'ArrowRight') {
+      if (e.key.includes('Arrow')) {
         cancelDeleteBtn.focus();
       }
     }

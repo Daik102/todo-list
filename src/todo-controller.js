@@ -115,7 +115,7 @@ export function todoController() {
   const timeForEdit = document.getElementById('time-for-edit');
   const priorityForEdit = document.getElementById('priority-for-edit');
   const todoDescription = document.querySelector('.todo-description');
-  // For keyboard support.
+  // For keyboard support
   const cancelAddBtn = document.querySelector('.cancel-add-btn-for-project');
   const addBtn = document.querySelector('.add-btn-for-project');
   const addTodoBtn = document.querySelector('.add-todo-btn');
@@ -185,7 +185,7 @@ export function todoController() {
         listIndex = i;
       }
     }
-    console.log(projectList);
+    
     if (projectList[listIndex][0].id === 0) {
       projectList[listIndex] = [];
     }
@@ -414,23 +414,23 @@ export function todoController() {
         firstItem.focus();
       }
     } else if (element === 'title') {
-      if (e.key === 'ArrowUp' || e.key === 'ArrowLeft') {
+      if (e.key === 'ArrowUp') {
         addBtn.focus();
-      } else if (e.key === 'ArrowDown' || e.key === 'ArrowRight') {
+      } else if (e.key === 'ArrowDown') {
         description.focus();
       } else if (e.key === 'Enter') {
         e.preventDefault();
         addTodoToProject(projectList);
       }
     } else if (element === 'description') {
-      if (e.key === 'ArrowUp' || e.key === 'ArrowLeft') {
+      if (e.key === 'ArrowUp') {
         title.focus();
-      } else if (e.key === 'ArrowDown' || e.key === 'ArrowRight') {
+      } else if (e.key === 'ArrowDown') {
         dueDate.focus();
         dueDate.showPicker();
       }
     } else if (element === 'dueDate') {
-      if (e.key === 'ArrowUp' || e.key === 'ArrowDown' || e.key === 'ArrowLeft' || e.key === 'ArrowRight') {
+      if (e.key.includes('Arrow')) {
         e.preventDefault();
 
         if (e.key === 'ArrowUp' || e.key === 'ArrowLeft') {
@@ -441,7 +441,7 @@ export function todoController() {
         }
       }
     } else if (element === 'time') {
-      if (e.key === 'ArrowUp' || e.key === 'ArrowDown' || e.key === 'ArrowLeft' || e.key === 'ArrowRight') {
+      if (e.key.includes('Arrow')) {
         e.preventDefault();
 
         if (e.key === 'ArrowUp' || e.key === 'ArrowLeft') {
@@ -453,7 +453,7 @@ export function todoController() {
         }
       }
     } else if (element === 'priority') {
-      if (e.key === 'ArrowUp' || e.key === 'ArrowDown' || e.key === 'ArrowLeft' || e.key === 'ArrowRight') {
+      if (e.key.includes('Arrow')) {
         e.preventDefault();
 
         if (e.key === 'ArrowUp' || e.key === 'ArrowLeft') {
@@ -520,23 +520,23 @@ export function todoController() {
         }
       }
     } else if (element === 'titleForEdit') {
-      if (e.key === 'ArrowUp' || e.key === 'ArrowLeft') {
+      if (e.key === 'ArrowUp') {
         editBtnForTodo.focus();
-      } else if (e.key === 'ArrowDown' || e.key === 'ArrowRight') {
+      } else if (e.key === 'ArrowDown') {
         descriptionForEdit.focus();
       } else if (e.key === 'Enter') {
         e.preventDefault();
         editTodo(projectList);
       }
     } else if (element === 'descriptionForEdit') {
-      if (e.key === 'ArrowUp' || e.key === 'ArrowLeft') {
+      if (e.key === 'ArrowUp') {
         titleForEdit.focus();
-      } else if (e.key === 'ArrowDown' || e.key === 'ArrowRight') {
+      } else if (e.key === 'ArrowDown') {
         dueDateForEdit.focus();
         dueDateForEdit.showPicker();
       }
     } else if (element === 'dueDateForEdit') {
-      if (e.key === 'ArrowUp' || e.key === 'ArrowDown' || e.key === 'ArrowLeft' || e.key === 'ArrowRight') {
+      if (e.key.includes('Arrow')) {
         e.preventDefault();
 
         if (e.key === 'ArrowUp' || e.key === 'ArrowLeft') {
@@ -547,7 +547,7 @@ export function todoController() {
         }
       }
     } else if (element === 'timeForEdit') {
-      if (e.key === 'ArrowUp' || e.key === 'ArrowDown' || e.key === 'ArrowLeft' || e.key === 'ArrowRight') {
+      if (e.key.includes('Arrow')) {
         e.preventDefault();
 
         if (e.key === 'ArrowUp' || e.key === 'ArrowLeft') {
@@ -559,7 +559,7 @@ export function todoController() {
         }
       }
     } else if (element === 'priorityForEdit') {
-      if (e.key === 'ArrowUp' || e.key === 'ArrowDown' || e.key === 'ArrowLeft' || e.key === 'ArrowRight') {
+      if (e.key.includes('Arrow')) {
         e.preventDefault();
 
         if (e.key === 'ArrowUp' || e.key === 'ArrowLeft') {
@@ -583,11 +583,11 @@ export function todoController() {
         titleForEdit.focus();
       }
     } else if (element === 'cancelDeleteBtnForTodo') {
-      if (e.key === 'ArrowUp' || e.key === 'ArrowDown' || e.key === 'ArrowLeft' || e.key === 'ArrowRight') {
+      if (e.key.includes('Arrow')) {
         deleteBtnForTodo.focus();
       }
     } else if (element === 'deleteBtnForTodo') {
-      if (e.key === 'ArrowUp' || e.key === 'ArrowDown' || e.key === 'ArrowLeft' || e.key === 'ArrowRight') {
+      if (e.key.includes('Arrow')) {
         cancelDeleteBtnForTodo.focus();
       }
     }
