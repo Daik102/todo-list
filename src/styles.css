@@ -7,7 +7,6 @@
   margin: 0;
   padding: 0;
   box-sizing: border-box;
-  font-family: Play-Bold, Arial, Helvetica, sans-serif;
 }
 
 :root {
@@ -34,6 +33,14 @@
 
 html {
   font-size: 50%;
+  font-family: Play-Bold, Arial, Helvetica, sans-serif;
+}
+
+input,
+button,
+textarea,
+select {
+  font-family: inherit;
 }
 
 body {
@@ -48,6 +55,7 @@ body {
   width: 100%;
   max-width: 52rem;
   min-height: 100vh;
+  min-height: 100svh;
   margin: 0 auto;
   padding: 6rem 2.4rem 4rem;
   background-color: var(--main-theme);
